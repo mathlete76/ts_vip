@@ -9,7 +9,7 @@ export const Verified: FC = () => {
     const { publicKey } = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
 
-    const DATABASE_URL = `postgresql://${process.env.PLANETSCALE_DB_USERNAME}:${process.env.PLANETSCALE_DB_PASSWORD}@${process.env.PLANETSCALE_DB_HOST}/${process.env.PLANETSCALE_DB}`;
+    const DATABASE_URL = `postgresql://${process.env.NEXT_PUBLIC_PLANETSCALE_DB_USERNAME}:${process.env.NEXT_PUBLIC_PLANETSCALE_DB_PASSWORD}@${process.env.NEXT_PUBLIC_PLANETSCALE_DB_HOST}/${process.env.NEXT_PUBLIC_PLANETSCALE_DB}`;
 
 
     const checkKYC = useCallback(async () => {
