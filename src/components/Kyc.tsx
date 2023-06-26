@@ -19,7 +19,7 @@ export const Kyc: FC = () => {
         let payload = {
             reference: `TS_VIP_${publicKey.toBase58()}`,
             journey_id: "shMlbzzM1687780796",
-            callback_url: "http://localhost",
+            callback_url: "https://ts-vip.vercel.app/",
         }
 
         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
