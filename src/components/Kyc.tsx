@@ -22,7 +22,7 @@ export const Kyc: FC = () => {
             callback_url: "https://ts-vip.vercel.app/",
         }
 
-        const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+        const btoa_string = process.env.SP_API_KEY + ":" + process.env.SP_API_SECRET;
 
         console.log("BTOA STRING: ", btoa_string);
         var token = btoa(btoa_string);
@@ -39,6 +39,8 @@ export const Kyc: FC = () => {
             });
 
             const data = await response.json();
+
+            console.log("KYC RESPONSE: ", data);
 
             if (data.event && data.event === 'verification.accepted') {
                 console.log(data);
