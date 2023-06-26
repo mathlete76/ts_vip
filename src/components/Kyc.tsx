@@ -47,7 +47,9 @@ export const Kyc: FC = () => {
 
             if (data.event && data.event === 'request.pending') {
                 console.log("KYC REQUEST PENDING");
-                window.location.href = data.verification_url;
+                window.open(data.verification_url, '_blank');
+                
+//                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
             } else {
                 console.log("KYC REQUEST ERROR");
                 console.log(data);
