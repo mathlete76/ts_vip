@@ -40,15 +40,13 @@ export const Kyc: FC = () => {
 
             const data = await response.json();
 
-            console.log(data.error.message);
-
-            // if (data.event && data.event === 'verification.accepted') {
-            //     console.log(data);
-            //     // Handle the case where the user's KYC status is approved
-            // } else {
-            //     console.log('KYC not approved!');
-            //     // Handle the case where the user's KYC status is not approved
-            // }
+            if (data.event && data.event === 'verification.accepted') {
+                console.log(data);
+                // Handle the case where the user's KYC status is approved
+            } else {
+                console.log('KYC not approved!');
+                // Handle the case where the user's KYC status is not approved
+            }
         } catch (error) {
             console.error('Error starting KYC process:', error);
         }
