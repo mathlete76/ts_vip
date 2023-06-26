@@ -17,7 +17,7 @@ export const Kyc: FC = () => {
         }
 
         let payload = {
-            reference: `TS_VIP_${publicKey.toBase58()}`,
+            reference: `TS_VIP_${publicKey.toBase58()}_${Math.random()}`,
             journey_id: "shMlbzzM1687780796",
             callback_url: "https://ts-vip.vercel.app/",
         }
