@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 // Components
+import { Verified } from '../../components/Verified';
 import { Kyc } from '../../components/Kyc';
 import pkg from '../../../package.json';
 
@@ -38,6 +39,9 @@ export const HomeView: FC = ({ }) => {
         <h4 className="md:w-full text-2x1 md:text-4xl text-center text-slate-300 my-2">
           <p>VIPs</p>
         </h4>
+        <div className="flex flex-col mt-2">
+          <Verified />
+        </div>
         <div className="flex flex-col mt-2">
           <Kyc />
         </div>
