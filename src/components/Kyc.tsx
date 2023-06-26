@@ -24,7 +24,6 @@ export const Kyc: FC = () => {
 
         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
 
-        console.log("BTOA STRING: ", btoa_string);
         var token = btoa(btoa_string);
 
         try {
@@ -42,13 +41,14 @@ export const Kyc: FC = () => {
 
             console.log("KYC RESPONSE: ", data);
 
-            if (data.event && data.event === 'verification.accepted') {
-                console.log(data);
-                // Handle the case where the user's KYC status is approved
+            if (data.event && data.event === 'request.pending') {
+                console.log("KYC REQUEST PENDING");
+                window.open(data.verification_url, '_blank');
             } else {
-                console.log('KYC not approved!');
-                // Handle the case where the user's KYC status is not approved
+                console.log("KYC REQUEST ERROR");
+                console.log(data);
             }
+
         } catch (error) {
             console.error('Error starting KYC process:', error);
         }
