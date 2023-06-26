@@ -9,17 +9,12 @@ export const Kyc: FC = () => {
     const { publicKey } = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
 
-    const DATABASE_URL = `postgresql://${process.env.PLANETSCALE_DB_USERNAME}:${process.env.PLANETSCALE_DB_PASSWORD}@${process.env.PLANETSCALE_DB_HOST}/${process.env.PLANETSCALE_DB}`;
-
-
     const startKYC = useCallback(async () => {
         if (!publicKey) {
             console.log('error', 'Wallet not connected!');
             notify({ type: 'error', message: 'error', description: 'Wallet not connected!' });
             return;
         }
-
-        console.log(DATABASE_URL);
 
         let payload = {
             reference: `TS_VIP_${publicKey.toBase58()}_${Math.random()}`,
