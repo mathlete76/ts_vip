@@ -22,7 +22,8 @@ export const Kyc: FC = () => {
             callback_url: "http://localhost",
         }
 
-        var token = btoa("6QAYiDFBycRoHPgHxWKCZUGlFG5yS74V4ywHRCLl8X9bJseXJQ1677062486:M4kvHzkzho7500kXzyzx4k8yW41U5ZUz");
+        const btoa_string = process.env.SP_API_KEY + ":" + process.env.SP_API_SECRET
+        var token = btoa(btoa_string);
 
         try {
             const response = await fetch('https://api.shuftipro.com/', {
