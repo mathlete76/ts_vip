@@ -3,44 +3,17 @@ import { LAMPORTS_PER_SOL, TransactionSignature } from '@solana/web3.js';
 import { FC, useCallback } from 'react';
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
-import { Pool } from 'pg';
 
 export const Kyc: FC = () => {
     const { connection } = useConnection();
     const { publicKey } = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
 
-    const pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-        ssl: {
-          rejectUnauthorized: false
-        }
-      });
-
-      const query = async (text, params) => {
-        const start = Date.now();
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-        console.log('executed query', { text, duration, rows: res.rowCount });
-        return res;
-      };
-
     const startKYC = useCallback(async () => {
         if (!publicKey) {
             console.log('error', 'Wallet not connected!');
             notify({ type: 'error', message: 'error', description: 'Wallet not connected!' });
             return;
-        }
-
-        const getKYCReferenceByPublicKey = async (publicKey) => {
-            const res = await query('SELECT * FROM kyc_references WHERE public_key = $1', [publicKey]);
-            return res.rows[0];
-          };
-
-        const kyc_ref = await getKYCReferenceByPublicKey(publicKey.toBase58());
-
-        if (kyc_ref) {
-            console.log("KYC REFERENCE: ", kyc_ref);
         }
 
         let payload = {
