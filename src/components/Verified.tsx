@@ -1,35 +1,33 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { Pool } from 'pg';
 import { FC, useCallback } from 'react';
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
+import serverlessMysql from 'serverless-mysql';
 
 export const Verified: FC = () => {
     const { connection } = useConnection();
     const { publicKey } = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
 
-    const DATABASE_URL = `postgresql://${process.env.NEXT_PUBLIC_PLANETSCALE_DB_USERNAME}:${process.env.NEXT_PUBLIC_PLANETSCALE_DB_PASSWORD}@${process.env.NEXT_PUBLIC_PLANETSCALE_DB_HOST}/${process.env.NEXT_PUBLIC_PLANETSCALE_DB}`;
-
-    const pool = new Pool({
-        connectionString: DATABASE_URL,
-        ssl: {
-          rejectUnauthorized: false
+    const db = serverlessMysql({
+        config: {
+            host: process.env.NEXT_PUBLIC_PLANETSCALE_DB_HOST,
+            database: process.env.NEXT_PUBLIC_PLANETSCALE_DB,
+            user: process.env.NEXT_PUBLIC_PLANETSCALE_DB_USERNAME,
+            password: process.env.NEXT_PUBLIC_PLANETSCALE_DB_PASSWORD,
         }
-      });
+    });
 
-    const query = async (text, params) => {
-        const start = Date.now();
-        const res = await pool.query(text, params);
-        const duration = Date.now() - start;
-        console.log('executed query', { text, duration, rows: res.rowCount });
-        return res;
+    const query = async (query, values) => {
+        const results = await db.query(query, values);
+        await db.end();
+        return results;
       };
 
     const getVIPByPublicKey = async (publicKey) => {
-        const res = await query('SELECT * FROM ts_vip WHERE pubkey = $1', [publicKey]);
-        return res.rows[0];
-    };
+        const res = await query('SELECT * FROM ts_vip WHERE pubkey = ?', [publicKey]);
+        return res[0];
+      };
 
     const checkKYC = useCallback(async () => {
         if (!publicKey) {
@@ -38,7 +36,7 @@ export const Verified: FC = () => {
             return;
         }
 
-        console.log(DATABASE_URL);
+        
 
         try {
             if (publicKey) {
