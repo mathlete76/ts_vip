@@ -97,15 +97,13 @@ export const Landing: FC = () => {
             if (!vipAccountData.verified && vipAccountData.reference != null) {
                 let payload = {
                     reference: vipAccountData.reference,
-                    journey_id: "shMlbzzM1687780796",
-                    callback_url: "https://ts-vip.vercel.app/",
                 }
         
                 const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
         
                 var token = btoa(btoa_string);
 
-                const response = await fetch('https://api.shuftipro.com/', {
+                const response = await fetch('https://api.shuftipro.com/status', {
                     method: 'post',
                     headers: {
                         'Accept': 'application/json',
