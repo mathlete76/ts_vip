@@ -54,9 +54,6 @@ export const Landing: FC = () => {
         }
     };
 
-
-
-    const [isCheckingVIPAccount, setIsCheckingVIPAccount] = useState(true);
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
     const checkVIPAccount = async () => {
@@ -82,9 +79,7 @@ export const Landing: FC = () => {
         // If the fetch method throws an error, the account does not exist
         console.log('VIP account does not exist');
         setHasVIPAccount(false);
-    } finally {
-        setIsCheckingVIPAccount(false);
-    }
+    } 
 };
 
 //     useEffect(() => {
@@ -188,8 +183,7 @@ export const Landing: FC = () => {
             <div className="relative group items-center">
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                    {!isCheckingVIPAccount && (
-                        hasVIPAccount ? (
+                    {hasVIPAccount ? (
                         <button
                             className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                             onClick={checkforVIP}
@@ -203,8 +197,7 @@ export const Landing: FC = () => {
                         >
                             <span>Create VIP Account</span>
                         </button>
-                    )
-                )}
+                    )}
 
                 {/* {!isCheckingVIPAccount && (
                     hasVIPAccount ? (
