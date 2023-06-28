@@ -27,12 +27,12 @@ export const Landing: FC = () => {
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
     const checkVIPAccount = useCallback(async () => {
-        if (!ourWallet) {
+        if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             notify({ type: 'error', message: 'error', description: 'Wallet not connected!' });
             return;
         }
-
+    
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
         try {
@@ -41,19 +41,18 @@ export const Landing: FC = () => {
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-
+    
             const vipAccount = await program.account.vipAccount.fetch(vipPda);
             // If the account exists, set the state variable
             if (vipAccount) {
                 setHasVIPAccount(true);
             }
-
+    
         } catch (error) {
             console.log(error);
             // If the account doesn't exist, set state to false
             setHasVIPAccount(false);
-
-        } finally {
+        }finally {
             setIsCheckingVIPAccount(false);
         }
 
