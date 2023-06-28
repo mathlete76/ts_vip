@@ -228,7 +228,6 @@ export const Landing: FC = () => {
                                         </button>
                                     </div>
                     )}</p>
-                    
                 </div> ) : (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
