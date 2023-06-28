@@ -41,26 +41,18 @@ export const Landing: FC = () => {
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-            if (program.account.vipAccount) {
-                const vipAccount = await program.account.vipAccount.fetch(vipPda);
-                // If the account exists, set the state variable
-                if (vipAccount) {
-                    setHasVIPAccount(true);
-                }
-            } else {
-                console.log('vipAccount does not exist in the program');
-            }
     
+            const vipAccount = await program.account.vipAccount.fetch(vipPda);
+            // If the fetch method does not throw an error, the account exists
+            setHasVIPAccount(true);
         } catch (error) {
-            console.log(error);
-            // If the account doesn't exist, set state to false
+            // If the fetch method throws an error, the account does not exist
+            console.log('VIP account does not exist');
             setHasVIPAccount(false);
-        }finally {
+        } finally {
             setIsCheckingVIPAccount(false);
         }
-
     }, [ourWallet, connection, getUserSOLBalance]);
-
 
     useEffect(() => {
         if (ourWallet) {
