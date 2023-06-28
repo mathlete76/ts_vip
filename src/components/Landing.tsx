@@ -34,7 +34,7 @@ export const Landing: FC = () => {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("vip"),
+                utils.bytes.utf8.encode("tvip"),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -71,7 +71,7 @@ export const Landing: FC = () => {
         const program = new Program(idl_object, programID, provider);
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("vip"),
+                utils.bytes.utf8.encode("tvip"),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -102,12 +102,12 @@ export const Landing: FC = () => {
 
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("vip"),
+                utils.bytes.utf8.encode("tvip"),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
 
-            const tx = await program.methods.initialize().accounts({
+            const tx = await program.methods.initialize("mathlete").accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
                 systemProgram: web3.SystemProgram.programId,
