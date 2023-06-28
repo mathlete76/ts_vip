@@ -42,8 +42,8 @@ export const Landing: FC = () => {
             if (vipAccount) {
                 console.log("VIP Account exists");
 
-                
-                console.log("VIP Account Data: ", vipAccount.data);
+                const vipAccountData = await program.account.vip.fetch(vipPda);
+                console.log("VIP Account Data: ", vipAccountData);
 
             } else {
                 console.log("VIP Account does not exist");
