@@ -7,7 +7,7 @@ import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 // Components
 import { Verified } from '../../components/Verified';
-import { Kyc } from '../../components/Kyc';
+import { Landing } from '../../components/Landing';
 import pkg from '../../../package.json';
 
 // Store
@@ -43,7 +43,7 @@ export const HomeView: FC = ({ }) => {
           <Verified />
         </div>
         <div className="flex flex-col mt-2">
-          <Kyc />
+          <Landing />
         </div>
       </div>
     </div>
