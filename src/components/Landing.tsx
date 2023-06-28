@@ -199,7 +199,8 @@ export const Landing: FC = () => {
                             </pre>
                         </div>
                     </div>
-                    <p>User: {vipAccountData.user.toBase58()}</p>
+                    <p>Wallet: {vipAccountData.user.toBase58()}</p>
+                    <p>Account: {vipAccountData.publicKey.toBase58()}</p>
                     <p>KYC Ref: {vipAccountData.reference}</p>
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
                     <p>Votes: {vipAccountData.votes}</p>
