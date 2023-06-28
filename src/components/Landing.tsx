@@ -154,6 +154,37 @@ export const Landing: FC = () => {
 
         console.log("KYC RESPONSE: ", data);
 
+        if (data.event && data.event === 'verification.accepted') {
+            const provider = getProvider();
+            const program = new Program(idl_object, programID, provider);
+
+            const [vipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("tvip"),
+                provider.wallet.publicKey.toBuffer(),
+            ], program.programId
+            );
+
+            const tx = await program.methods.verify(true).accounts({
+                vip: vipPda,
+                authority: provider.wallet.publicKey,
+                systemProgram: web3.SystemProgram.programId,
+            }).rpc();
+
+            const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+            await program.provider.connection.confirmTransaction({
+                blockhash: latestBlockHash.blockhash,
+                lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                signature: tx
+            });
+
+            notify({ type: 'success', message: 'KYC Accepted', description: tx });
+
+            console.log("KYC ACCEPTED");
+
+            setKYCstatus(true);
+
+        }
+
     };
 
 
