@@ -1,7 +1,7 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { FC, useCallback, useEffect, useState } from 'react';
-import { notify } from "../utils/notifications";
+// import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
@@ -27,14 +27,14 @@ export const Landing: FC = () => {
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
     const checkVIPAccount = useCallback(async () => {
-        if (!ourWallet?.publicKey) {
-            console.log('error', 'Wallet not connected!');
-            return;
-        }
+    if (!ourWallet?.publicKey) {
+        console.log('error', 'Wallet not connected!');
+        return;
+    }
 
-        const provider = getProvider();
-        const program = new Program(idl_object, programID, provider);
-
+    const provider = getProvider();
+    const program = new Program(idl_object, programID, provider);
+    try {
         const [vipPda] = await PublicKey.findProgramAddressSync([
             utils.bytes.utf8.encode("vip"),
             provider.wallet.publicKey.toBuffer(),
@@ -43,9 +43,15 @@ export const Landing: FC = () => {
 
         const vipAccount = await program.account.vipAccount.fetch(vipPda);
         // If the fetch method does not throw an error, the account exists
-        console.log("VIP Account: ", vipAccount);
-
-    }, [ourWallet, connection, getUserSOLBalance]);
+        setHasVIPAccount(true);
+    } catch (error) {
+        // If the fetch method throws an error, the account does not exist
+        console.log('VIP account does not exist');
+        setHasVIPAccount(false);
+    } finally {
+        setIsCheckingVIPAccount(false);
+    }
+}, [ourWallet, connection, getUserSOLBalance]);
 
     useEffect(() => {
         if (ourWallet) {
@@ -53,95 +59,94 @@ export const Landing: FC = () => {
         }
     }, [ourWallet, checkVIPAccount]);
 
+    const createVIPAccount = useCallback(async () => {
+        const provider = getProvider();
+        const program = new Program(idl_object, programID, provider);
+        
+        try {
+            const [vipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("vip"),
+                provider.wallet.publicKey.toBuffer(),
+            ], program.programId
+            );
+    
+            const tx = await program.methods.initialize().accounts({
+                vip: vipPda,
+                authority: provider.wallet.publicKey,
+                systemProgram: web3.SystemProgram.programId,
+            }).rpc();
+    
+            if (program.account.vipAccount) {
+                const vipAccount = await program.account.vipAccount.fetch(vipPda);
+                // If the account exists, set the state variable
+                if (vipAccount) {
+                    setHasVIPAccount(true);
+                }
+                console.log("VIP Account created: ", vipAccount);
+            } else {
+                console.log('vipAccount does not exist in the program');
+            }
+        } catch (error) {
+            console.log(error);
+            // If the account doesn't exist, set state to false
+            setHasVIPAccount(false);
+        } finally {
+            setIsCheckingVIPAccount(false);
+        }
+    }, [ourWallet, connection]);
+    
 
-    // const createVIPAccount = useCallback(async () => {
-    //     const provider = getProvider();
-    //     const program = new Program(idl_object, programID, provider);
+    const startKYC = useCallback(async () => {
+        if (!ourWallet) {
+            console.log('error', 'Wallet not connected!');
+  
+            return;
+        }
 
-    //     try {
-    //         const [vipPda] = await PublicKey.findProgramAddressSync([
-    //             utils.bytes.utf8.encode("vip"),
-    //             provider.wallet.publicKey.toBuffer(),
-    //         ], program.programId
-    //         );
+        let payload = {
+            reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
+            journey_id: "shMlbzzM1687780796",
+            callback_url: "https://ts-vip.vercel.app/",
+        }
 
-    //         const tx = await program.methods.initialize().accounts({
-    //             vip: vipPda,
-    //             authority: provider.wallet.publicKey,
-    //             systemProgram: web3.SystemProgram.programId,
-    //         }).rpc();
+        const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
 
-    //         if (program.account.vipAccount) {
-    //             const vipAccount = await program.account.vipAccount.fetch(vipPda);
-    //             // If the account exists, set the state variable
-    //             if (vipAccount) {
-    //                 setHasVIPAccount(true);
-    //             }
-    //             console.log("VIP Account created: ", vipAccount);
-    //         } else {
-    //             console.log('vipAccount does not exist in the program');
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //         // If the account doesn't exist, set state to false
-    //         setHasVIPAccount(false);
-    //     } finally {
-    //         setIsCheckingVIPAccount(false);
-    //     }
-    // }, [ourWallet, connection]);
+        var token = btoa(btoa_string);
 
+        try {
+            const response = await fetch('https://api.shuftipro.com/', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + token
+                },
+                body: JSON.stringify(payload)
+            });
 
-    // const startKYC = useCallback(async () => {
-    //     if (!ourWallet) {
-    //         console.log('error', 'Wallet not connected!');
-    //         notify({ type: 'error', message: 'error', description: 'Wallet not connected!' });
-    //         return;
-    //     }
+            const data = await response.json();
 
-    //     let payload = {
-    //         reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
-    //         journey_id: "shMlbzzM1687780796",
-    //         callback_url: "https://ts-vip.vercel.app/",
-    //     }
+            console.log("KYC RESPONSE: ", data);
 
-    //     const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+            if (data.reference) {
+                const kyc_ref = data.reference;
+            }
 
-    //     var token = btoa(btoa_string);
+            if (data.event && data.event === 'request.pending') {
+                console.log("KYC REQUEST PENDING");
+                window.open(data.verification_url, '_blank');
 
-    //     try {
-    //         const response = await fetch('https://api.shuftipro.com/', {
-    //             method: 'post',
-    //             headers: {
-    //                 'Accept': 'application/json',
-    //                 'Content-Type': 'application/json',
-    //                 'Authorization': 'Basic ' + token
-    //             },
-    //             body: JSON.stringify(payload)
-    //         });
+                //                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
+            } else {
+                console.log("KYC REQUEST ERROR");
+                console.log(data);
+            }
 
-    //         const data = await response.json();
+        } catch (error) {
+            console.error('Error starting KYC process:', error);
+        }
 
-    //         console.log("KYC RESPONSE: ", data);
-
-    //         if (data.reference) {
-    //             const kyc_ref = data.reference;
-    //         }
-
-    //         if (data.event && data.event === 'request.pending') {
-    //             console.log("KYC REQUEST PENDING");
-    //             window.open(data.verification_url, '_blank');
-
-    //             //                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
-    //         } else {
-    //             console.log("KYC REQUEST ERROR");
-    //             console.log(data);
-    //         }
-
-    //     } catch (error) {
-    //         console.error('Error starting KYC process:', error);
-    //     }
-
-    // }, [ourWallet, connection, getUserSOLBalance]);
+    }, [ourWallet, connection, getUserSOLBalance]);
 
 
     return (
@@ -154,19 +159,18 @@ export const Landing: FC = () => {
                     hasVIPAccount ? (
                         <button
                             className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-//                            onClick={startKYC}
+                            onClick={startKYC}
                         >
-                            <span>KYC Placeholder </span> // allow onClick above to restart KYC process
+                            <span>KYC Verify </span>
                         </button>
                     ) : (
                         <button
                             className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-//                            onClick={createVIPAccount}
+                            onClick={createVIPAccount}
                         >
-                            <span>Account creation placeholder</span> // allow onClick above to create VIP account
+                            <span>Create VIP Account</span>
                         </button>
                     )
-                    
                 )}
             </div>
         </div>
