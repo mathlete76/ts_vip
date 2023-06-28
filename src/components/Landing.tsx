@@ -41,11 +41,14 @@ export const Landing: FC = () => {
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-    
-            const vipAccount = await program.account.vipAccount.fetch(vipPda);
-            // If the account exists, set the state variable
-            if (vipAccount) {
-                setHasVIPAccount(true);
+            if (program.account.vipAccount) {
+                const vipAccount = await program.account.vipAccount.fetch(vipPda);
+                // If the account exists, set the state variable
+                if (vipAccount) {
+                    setHasVIPAccount(true);
+                }
+            } else {
+                console.log('vipAccount does not exist in the program');
             }
     
         } catch (error) {
