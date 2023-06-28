@@ -29,8 +29,8 @@ export const Landing: FC = () => {
             console.log('error', 'Wallet not connected!');
             return;
         }
-        
-        try{
+
+        try {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
             const [vipPda] = await PublicKey.findProgramAddressSync([
@@ -62,32 +62,32 @@ export const Landing: FC = () => {
     const [vipAccountData, setVipAccountData] = useState(null);
 
     const checkVIPAccount = async () => {
-    if (!ourWallet?.publicKey) {
-        console.log('error', 'Wallet not connected!');
-        return;
-    }
-
-    const provider = getProvider();
-    const program = new Program(idl_object, programID, provider);
-    try {
-        const [vipPda] = await PublicKey.findProgramAddressSync([
-            utils.bytes.utf8.encode("vip"),
-            provider.wallet.publicKey.toBuffer(),
-        ], program.programId
-        );
-
-        const vipAccount = await program.account.vip.fetch(vipPda);
-        if(vipAccount){
-            setHasVIPAccount(true);
-            setVipAccountData(vipAccount);
+        if (!ourWallet?.publicKey) {
+            console.log('error', 'Wallet not connected!');
+            return;
         }
-    } catch (error) {
-        // If the fetch method throws an error, the account does not exist
-        console.log('VIP account does not exist');
-        setHasVIPAccount(false);
-    } 
 
-};
+        const provider = getProvider();
+        const program = new Program(idl_object, programID, provider);
+        try {
+            const [vipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("vip"),
+                provider.wallet.publicKey.toBuffer(),
+            ], program.programId
+            );
+
+            const vipAccount = await program.account.vip.fetch(vipPda);
+            if (vipAccount) {
+                setHasVIPAccount(true);
+                setVipAccountData(vipAccount);
+            }
+        } catch (error) {
+            // If the fetch method throws an error, the account does not exist
+            console.log('VIP account does not exist');
+            setHasVIPAccount(false);
+        }
+
+    };
 
 
     useEffect(() => {
@@ -99,14 +99,14 @@ export const Landing: FC = () => {
     const createVIPAccount = async () => {
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
-        
+
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode("vip"),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-    
+
             const tx = await program.methods.initialize().accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
@@ -115,13 +115,13 @@ export const Landing: FC = () => {
 
             const latestBlockHash = await program.provider.connection.getLatestBlockhash();
             await program.provider.connection.confirmTransaction({
-              blockhash: latestBlockHash.blockhash,
-              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-              signature: tx
+                blockhash: latestBlockHash.blockhash,
+                lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                signature: tx
             });
 
             notify({ type: 'success', message: 'Account Created', description: tx });
-    
+
             console.log("Account Created");
 
             setHasVIPAccount(true);
@@ -129,98 +129,106 @@ export const Landing: FC = () => {
             console.log(error);
             // If the account doesn't exist, set state to false
             setHasVIPAccount(false);
-        } 
+        }
     };
-    
 
-//     const startKYC = useCallback(async () => {
-//         if (!ourWallet) {
-//             console.log('error', 'Wallet not connected!');
-  
-//             return;
-//         }
 
-//         let payload = {
-//             reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
-//             journey_id: "shMlbzzM1687780796",
-//             callback_url: "https://ts-vip.vercel.app/",
-//         }
+    //     const startKYC = useCallback(async () => {
+    //         if (!ourWallet) {
+    //             console.log('error', 'Wallet not connected!');
 
-//         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+    //             return;
+    //         }
 
-//         var token = btoa(btoa_string);
+    //         let payload = {
+    //             reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
+    //             journey_id: "shMlbzzM1687780796",
+    //             callback_url: "https://ts-vip.vercel.app/",
+    //         }
 
-//         try {
-//             const response = await fetch('https://api.shuftipro.com/', {
-//                 method: 'post',
-//                 headers: {
-//                     'Accept': 'application/json',
-//                     'Content-Type': 'application/json',
-//                     'Authorization': 'Basic ' + token
-//                 },
-//                 body: JSON.stringify(payload)
-//             });
+    //         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
 
-//             const data = await response.json();
+    //         var token = btoa(btoa_string);
 
-//             console.log("KYC RESPONSE: ", data);
+    //         try {
+    //             const response = await fetch('https://api.shuftipro.com/', {
+    //                 method: 'post',
+    //                 headers: {
+    //                     'Accept': 'application/json',
+    //                     'Content-Type': 'application/json',
+    //                     'Authorization': 'Basic ' + token
+    //                 },
+    //                 body: JSON.stringify(payload)
+    //             });
 
-//             if (data.reference) {
-//                 const kyc_ref = data.reference;
-//             }
+    //             const data = await response.json();
 
-//             if (data.event && data.event === 'request.pending') {
-//                 console.log("KYC REQUEST PENDING");
-//                 window.open(data.verification_url, '_blank');
+    //             console.log("KYC RESPONSE: ", data);
 
-//                 //                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
-//             } else {
-//                 console.log("KYC REQUEST ERROR");
-//                 console.log(data);
-//             }
+    //             if (data.reference) {
+    //                 const kyc_ref = data.reference;
+    //             }
 
-//         } catch (error) {
-//             console.error('Error starting KYC process:', error);
-//         }
+    //             if (data.event && data.event === 'request.pending') {
+    //                 console.log("KYC REQUEST PENDING");
+    //                 window.open(data.verification_url, '_blank');
 
-//     }, [ourWallet, connection, getUserSOLBalance]);
+    //                 //                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
+    //             } else {
+    //                 console.log("KYC REQUEST ERROR");
+    //                 console.log(data);
+    //             }
+
+    //         } catch (error) {
+    //             console.error('Error starting KYC process:', error);
+    //         }
+
+    //     }, [ourWallet, connection, getUserSOLBalance]);
 
     return (
-        
+
         <div className="flex flex-row justify-center">
-                                {hasVIPAccount ? (
-                        <div>
-                        <p>{ourWallet?.publicKey?.toBase58()} has a TS VIP account initialised</p>
-                        <p>User: {vipAccountData.user.toBase58()}</p>
-                        <p>KYC Ref: {vipAccountData.reference}</p>
-                        <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
-                        <p>Votes: {vipAccountData.votes}</p>
-                        <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
-                        <p>NFT Will Appear Here</p>
-                        <p>List of backers will apeear here</p>
+            {hasVIPAccount ? (
+
+                <div>
+                    <div className="relative group">
+                        <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-indigo-500 rounded-lg blur opacity-40 animate-tilt"></div>
+                        <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                            <pre data-prefix=">">
+                                <code className="truncate">{ourWallet?.publicKey?.toBase58()}</code>
+                            </pre>
                         </div>
-                        // <button
-                        //     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                        //     onClick={checkforVIP}
-                        // >
-                        //     <span>Checks Again </span>
-                        // </button>
-                    )  : (
-            <div className="relative group items-center">
-                <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
+                    </div>
+                    <p>User: {vipAccountData.user.toBase58()}</p>
+                    <p>KYC Ref: {vipAccountData.reference}</p>
+                    <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
+                    <p>Votes: {vipAccountData.votes}</p>
+                    <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
+                    <p>NFT Will Appear Here</p>
+                    <p>List of backers will apeear here</p>
+                </div>
+                // <button
+                //     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                //     onClick={checkforVIP}
+                // >
+                //     <span>Checks Again </span>
+                // </button>
+            ) : (
+                <div className="relative group items-center">
+                    <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
-                        <button
-                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                            onClick={createVIPAccount}
-                        >
-                            <span>Create Account</span>
-                        </button>
-                        </div>
+                    <button
+                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                        onClick={createVIPAccount}
+                    >
+                        <span>Create Account</span>
+                    </button>
+                </div>
 
-                    )}
+            )}
 
-                {/* {!isCheckingVIPAccount && (
+            {/* {!isCheckingVIPAccount && (
                     hasVIPAccount ? (
                         <button
                             className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
@@ -237,7 +245,7 @@ export const Landing: FC = () => {
                         </button>
                     )
                 )} */}
-            </div>
+        </div>
 
     );
 };
