@@ -81,6 +81,8 @@ export const Landing: FC = () => {
         setHasVIPAccount(false);
     } 
 
+};
+
 
     useEffect(() => {
         if (ourWallet) {
@@ -88,7 +90,7 @@ export const Landing: FC = () => {
         }
     }, [ourWallet, checkVIPAccount]);
 
-};
+
 
 //     const createVIPAccount = useCallback(async () => {
 //         const provider = getProvider();
