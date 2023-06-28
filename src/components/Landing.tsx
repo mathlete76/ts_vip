@@ -69,30 +69,32 @@ export const Landing: FC = () => {
     }, [ourWallet, checkVIPAccount]);
 
     const createVIPAccount = useCallback(async () => {
-        // Your logic to create a VIP account
-        // After successful creation, set the state variable
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
-
+        
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode("vip"),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-
+    
             const tx = await program.methods.initialize().accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
-
-            const vipAccount = await program.account.vipAccount.fetch(vipPda);
-            // If the account exists, set the state variable
-            if (vipAccount) {
-                setHasVIPAccount(true);
+    
+            if (program.account.vipAccount) {
+                const vipAccount = await program.account.vipAccount.fetch(vipPda);
+                // If the account exists, set the state variable
+                if (vipAccount) {
+                    setHasVIPAccount(true);
+                }
+                console.log("VIP Account created: ", vipAccount);
+            } else {
+                console.log('vipAccount does not exist in the program');
             }
-            console.log("VIP Account created: ", vipAccount);
         } catch (error) {
             console.log(error);
             // If the account doesn't exist, set state to false
@@ -101,6 +103,7 @@ export const Landing: FC = () => {
             setIsCheckingVIPAccount(false);
         }
     }, [ourWallet, connection]);
+    
 
     const startKYC = useCallback(async () => {
         if (!ourWallet) {
