@@ -23,7 +23,7 @@ export const Landing: FC = () => {
 
     // SHould I put a function here that checks if the user has a VIP account on-chain?
     // If not the rather than the startKYC function, it should be a function that creates a VIP account on-chain
-
+    const [isCheckingVIPAccount, setIsCheckingVIPAccount] = useState(true);
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
     const checkVIPAccount = useCallback(async () => {
@@ -35,7 +35,7 @@ export const Landing: FC = () => {
 
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
-        try{
+        try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode("vip"),
                 provider.wallet.publicKey.toBuffer(),
@@ -53,6 +53,8 @@ export const Landing: FC = () => {
             // If the account doesn't exist, set state to false
             setHasVIPAccount(false);
 
+        } finally {
+            setIsCheckingVIPAccount(false);
         }
 
     }, [ourWallet, connection, getUserSOLBalance]);
@@ -69,8 +71,8 @@ export const Landing: FC = () => {
         // After successful creation, set the state variable
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
-        
-        try{
+
+        try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode("vip"),
                 provider.wallet.publicKey.toBuffer(),
@@ -93,6 +95,8 @@ export const Landing: FC = () => {
             console.log(error);
             // If the account doesn't exist, set state to false
             setHasVIPAccount(false);
+        } finally {
+            setIsCheckingVIPAccount(false);
         }
     }, [ourWallet, connection]);
 
@@ -155,20 +159,22 @@ export const Landing: FC = () => {
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
-                {hasVIPAccount ? (
-                    <button
-                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                        onClick={startKYC}
-                    >
-                        <span>KYC Verify </span>
-                    </button>
-                ) : (
-                    <button
-                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                        onClick={createVIPAccount}
-                    >
-                        <span>Create VIP Account</span>
-                    </button>
+                {!isCheckingVIPAccount && (
+                    hasVIPAccount ? (
+                        <button
+                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                            onClick={startKYC}
+                        >
+                            <span>KYC Verify </span>
+                        </button>
+                    ) : (
+                        <button
+                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                            onClick={createVIPAccount}
+                        >
+                            <span>Create VIP Account</span>
+                        </button>
+                    )
                 )}
             </div>
         </div>
