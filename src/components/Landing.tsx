@@ -62,6 +62,7 @@ export const Landing: FC = () => {
     const [vipAccountData, setVipAccountData] = useState(null);
     const [vipAccountAddy, setVipAccountAddy] = useState(null);
     const [isKYCd, setKYCstatus] = useState(null);
+    const [passedKYC, setPassedKYC] = useState(null);
 
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
@@ -92,6 +93,33 @@ export const Landing: FC = () => {
             } else {
                 setKYCstatus(false);
             }
+
+            if (!vipAccountData.verified && vipAccountData.reference != null) {
+                let payload = {
+                    reference: vipAccountData.reference,
+                    journey_id: "shMlbzzM1687780796",
+                    callback_url: "https://ts-vip.vercel.app/",
+                }
+        
+                const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+        
+                var token = btoa(btoa_string);
+
+                const response = await fetch('https://api.shuftipro.com/', {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + token
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                console.log("KYC RESPONSE: ", data);
+            }
+
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
             console.log('VIP account does not exist');
@@ -208,7 +236,7 @@ export const Landing: FC = () => {
                 console.log("KYC REQUEST PENDING");
                 
                 window.location.href = data.verification_url;
-                
+
             } else {
                 console.log("KYC REQUEST ERROR");
                 console.log(data);
