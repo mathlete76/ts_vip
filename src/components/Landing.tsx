@@ -45,6 +45,8 @@ export const Landing: FC = () => {
                 const vipAccountData = await program.account.vip.fetch(vipPda);
                 console.log("VIP Account Data: ", vipAccountData);
 
+                return vipAccountData;
+
             } else {
                 console.log("VIP Account does not exist");
             }
@@ -55,6 +57,7 @@ export const Landing: FC = () => {
     };
 
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
+    const [vipAccountData, setVipAccountData] = useState(null);
 
     const checkVIPAccount = async () => {
     if (!ourWallet?.publicKey) {
@@ -74,6 +77,7 @@ export const Landing: FC = () => {
         const vipAccount = await program.account.vip.fetch(vipPda);
         if(vipAccount){
             setHasVIPAccount(true);
+            setVipAccountData(vipAccount);
         }
     } catch (error) {
         // If the fetch method throws an error, the account does not exist
@@ -181,16 +185,22 @@ export const Landing: FC = () => {
 
 //     }, [ourWallet, connection, getUserSOLBalance]);
 
-
     return (
         <div className="flex flex-row justify-center">
             <div className="relative group items-center">
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                     {hasVIPAccount ? (
-                        <p>
-                            {ourWallet?.publicKey?.toBase58()} is a VIP
-                        </p>
+                        <div>
+                        <p>{ourWallet?.publicKey?.toBase58()} has a TS VIP account initialised</p>
+                        <p>User: {vipAccountData.user.toBase58()}</p>
+                        <p>KYC Ref: {vipAccountData.reference}</p>
+                        <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
+                        <p>Votes: {vipAccountData.votes}</p>
+                        <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
+                        <p>NFT Will Appear Here</p>
+                        <p>List of backers will apeear here</p>
+                        </div>
                         // <button
                         //     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                         //     onClick={checkforVIP}
