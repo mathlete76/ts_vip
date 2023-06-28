@@ -63,7 +63,6 @@ export const Landing: FC = () => {
     const [vipAccountAddy, setVipAccountAddy] = useState(null);
     const [isKYCd, setKYCstatus] = useState(null);
 
-    
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
@@ -217,74 +216,23 @@ export const Landing: FC = () => {
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
                     <p>Votes: {vipAccountData.votes}</p>
                     <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
-                    <p>NFT Will Appear Here</p>
-                    <p>List of backers will apeear here</p>
-                    {isKYCd ? (
-                        <div className="relative group items-center">
-                        
-                            <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
-                        rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-
-                            <button
-                                className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                //onClick={createVIPAccount}
-                            >
-                                <span>Congrats You are KYC'd</span>
-                            </button>
-                        </div>
-                        ) : (
-                            <div className="relative group items-center">
-                        
-                            <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
-                        rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-
-                            <button
-                                className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                //onClick={createVIPAccount}
-                            >
-                                <span>You Need to KYC</span>
-                            </button>
-                        </div>
-                        )}
-                </div>
-                // <button
-                //     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                //     onClick={checkforVIP}
-                // >
-                //     <span>Checks Again </span>
-                // </button>
-            ) : (
+                    <p>isKYDd: {isKYCd ? "Yes" : "No"}</p>
+                    
+                </div> ) : (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-
                     <button
                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                         onClick={createVIPAccount}
                     >
-                        <span>Create Account</span>
+                        <span>Create VIP Account</span>
                     </button>
                 </div>
 
             )}
 
-            {/* {!isCheckingVIPAccount && (
-                    hasVIPAccount ? (
-                        <button
-                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                            onClick={startKYC}
-                        >
-                            <span>KYC Verify </span>
-                        </button>
-                    ) : (
-                        <button
-                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                            onClick={createVIPAccount}
-                        >
-                            <span>Create VIP Account</span>
-                        </button>
-                    )
-                )} */}
+
         </div>
 
     );
