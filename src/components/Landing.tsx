@@ -6,6 +6,7 @@ import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
+import { set } from 'date-fns';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -122,6 +123,8 @@ export const Landing: FC = () => {
             notify({ type: 'success', message: 'Account Created', description: tx });
     
             console.log("Account Created");
+
+            setHasVIPAccount(true);
         } catch (error) {
             console.log(error);
             // If the account doesn't exist, set state to false
