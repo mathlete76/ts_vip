@@ -39,9 +39,9 @@ export const HomeView: FC = ({ }) => {
         <h4 className="md:w-full text-2x1 md:text-4xl text-center text-slate-300 my-2">
           <p>VIPs</p>
         </h4>
-        <div className="flex flex-col mt-2">
+        {/* <div className="flex flex-col mt-2">
           <Verified />
-        </div>
+        </div> */}
         <div className="flex flex-col mt-2">
           <Landing />
         </div>
