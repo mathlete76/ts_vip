@@ -18,9 +18,36 @@ export const Landing: FC = () => {
 
     const getProvider = () => {
         const provider = new AnchorProvider(connection, ourWallet, AnchorProvider.defaultOptions());
-//         return provider;
-
+        return provider;
     };
+
+    if (!ourWallet?.publicKey) {
+        console.log('error', 'Wallet not connected!');
+        return;
+    }
+
+    const checkforVIP = useCallback(async () => {
+        try{
+            const provider = getProvider();
+            const program = new Program(idl_object, programID, provider);
+            const [vipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("vip"),
+                provider.wallet.publicKey.toBuffer(),
+            ], program.programId
+            );
+
+            const vipAccount = await program.provider.connection.getAccountInfo(vipPda);
+
+            console.log("VIP Account: ", vipAccount);
+        } catch (error) {
+            console.log(error);
+        }
+    }, [ourWallet, connection]);
+
+
+
+
+
 //     }
 
 //     // SHould I put a function here that checks if the user has a VIP account on-chain?
@@ -158,7 +185,9 @@ export const Landing: FC = () => {
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
 
                     <button
-                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black">
+                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                        onClick={checkforVIP}
+                    >
                         <span>Dummy </span>
                     </button>
 
