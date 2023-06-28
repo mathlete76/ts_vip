@@ -166,6 +166,7 @@ export const Landing: FC = () => {
                             <span>Account creation placeholder</span> // allow onClick above to create VIP account
                         </button>
                     )
+                    
                 )}
             </div>
         </div>
