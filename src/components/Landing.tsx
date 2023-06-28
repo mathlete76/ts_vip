@@ -21,9 +21,7 @@ export const Landing: FC = () => {
         return provider;
     };
 
-
-
-    const checkforVIP = useCallback(async () => {
+    const checkforVIP = async () => {
 
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
@@ -41,11 +39,15 @@ export const Landing: FC = () => {
 
             const vipAccount = await program.provider.connection.getAccountInfo(vipPda);
 
+            if (vipAccount) {
+                console.log("VIP Account exists");
+            }
+
             console.log("VIP Account: ", vipAccount);
         } catch (error) {
             console.log(error);
         }
-    }, [ourWallet, connection]);
+    };
 
 //     }
 
