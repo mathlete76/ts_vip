@@ -2,11 +2,21 @@ import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { FC, useCallback } from 'react';
 import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
+import { drizzle } from "drizzle-orm/planetscale-serverless";
+import { connect } from "@planetscale/database";
 
 export const Verified: FC = () => {
     const { connection } = useConnection();
     const { publicKey } = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
+
+    const ps_conn = connect({
+        host: process.env.NEXT_PUBLIC_PLANETSCALE_DB_HOST,
+        username: process.env.NEXT_PUBLIC_PLANETSCALE_DB_USERNAME,
+        password: process.env.NEXT_PUBLIC_PLANETSCALE_DB_PASSWORD,
+      });
+
+      const db = drizzle(ps_conn);
 
     const checkKYC = useCallback(async () => {
         if (!publicKey) {
@@ -14,15 +24,6 @@ export const Verified: FC = () => {
             notify({ type: 'error', message: 'error', description: 'Wallet not connected!' });
             return;
         }
-
-        
-
-        try {
-            if (publicKey) {
-            }
-        } catch (error) {
-            console.error('Error checking VIP status:', error);
-        };
 
 
 }, [publicKey, connection, getUserSOLBalance]);
