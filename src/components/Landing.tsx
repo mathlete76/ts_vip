@@ -60,6 +60,7 @@ export const Landing: FC = () => {
 
     const [hasVIPAccount, setHasVIPAccount] = useState(false);
     const [vipAccountData, setVipAccountData] = useState(null);
+    const [vipAccountAddy, setVipAccountAddy] = useState(null);
 
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
@@ -80,6 +81,7 @@ export const Landing: FC = () => {
             if (vipAccount) {
                 setHasVIPAccount(true);
                 setVipAccountData(vipAccount);
+                setVipAccountAddy(vipPda);
             }
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
@@ -200,7 +202,7 @@ export const Landing: FC = () => {
                         </div>
                     </div>
                     <p>Wallet: {vipAccountData.user.toBase58()}</p>
-                    <p>Account: {vipAccountData.publicKey.toBase58()}</p>
+                    <p>Account: {vipAccountAddy.toBase58()}</p>
                     <p>KYC Ref: {vipAccountData.reference}</p>
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
                     <p>Votes: {vipAccountData.votes}</p>
