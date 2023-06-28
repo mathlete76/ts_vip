@@ -21,12 +21,15 @@ export const Landing: FC = () => {
         return provider;
     };
 
-    if (!ourWallet?.publicKey) {
-        console.log('error', 'Wallet not connected!');
-        return;
-    }
+
 
     const checkforVIP = useCallback(async () => {
+
+        if (!ourWallet?.publicKey) {
+            console.log('error', 'Wallet not connected!');
+            return;
+        }
+        
         try{
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
@@ -43,10 +46,6 @@ export const Landing: FC = () => {
             console.log(error);
         }
     }, [ourWallet, connection]);
-
-
-
-
 
 //     }
 
