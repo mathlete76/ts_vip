@@ -70,6 +70,28 @@ export const Landing: FC = () => {
             return;
         }
 
+        let payload = {
+            reference: vipAccountData.reference,
+        }
+
+        const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+
+        var token = btoa(btoa_string);
+
+        const response = await fetch('https://api.shuftipro.com/status', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Basic ' + token
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        console.log("KYC RESPONSE: ", data);
+
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
         try {
@@ -93,30 +115,30 @@ export const Landing: FC = () => {
             } else {
                 setKYCstatus(false);
             }
+            // if (!vipAccountData.verified && vipAccountData.reference != null) {
+            //     let payload = {
+            //         reference: vipAccountData.reference,
+            //     }
 
-            if (!vipAccountData.verified && vipAccountData.reference != null) {
-                let payload = {
-                    reference: vipAccountData.reference,
-                }
-        
-                const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
-        
-                var token = btoa(btoa_string);
+            //     const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
 
-                const response = await fetch('https://api.shuftipro.com/status', {
-                    method: 'post',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Basic ' + token
-                    },
-                    body: JSON.stringify(payload)
-                });
+            //     var token = btoa(btoa_string);
 
-                const data = await response.json();
+            //     const response = await fetch('https://api.shuftipro.com/status', {
+            //         method: 'post',
+            //         headers: {
+            //             'Accept': 'application/json',
+            //             'Content-Type': 'application/json',
+            //             'Authorization': 'Basic ' + token
+            //         },
+            //         body: JSON.stringify(payload)
+            //     });
 
-                console.log("KYC RESPONSE: ", data);
-            }
+            //     const data = await response.json();
+
+            //     console.log("KYC RESPONSE: ", data);
+
+            // }
 
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
@@ -232,7 +254,7 @@ export const Landing: FC = () => {
                 notify({ type: 'success', message: 'KYC Requested', description: tx });
 
                 console.log("KYC REQUEST PENDING");
-                
+
                 window.location.href = data.verification_url;
 
             } else {
