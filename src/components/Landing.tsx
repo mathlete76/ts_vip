@@ -80,13 +80,15 @@ export const Landing: FC = () => {
         console.log('VIP account does not exist');
         setHasVIPAccount(false);
     } 
-};
 
-//     useEffect(() => {
-//         if (ourWallet) {
-//             checkVIPAccount();
-//         }
-//     }, [ourWallet, checkVIPAccount]);
+
+    useEffect(() => {
+        if (ourWallet) {
+            checkVIPAccount();
+        }
+    }, [ourWallet, checkVIPAccount]);
+
+};
 
 //     const createVIPAccount = useCallback(async () => {
 //         const provider = getProvider();
@@ -191,12 +193,15 @@ export const Landing: FC = () => {
                             <span>Checks Again </span>
                         </button>
                     ) : (
-                        <button
-                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                            onClick={checkforVIP}
-                        >
-                            <span>Create VIP Account</span>
-                        </button>
+                        <p>
+                            
+                        </p>
+                        // <button
+                        //     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                        //     onClick={checkforVIP}
+                        // >
+                        //     <span>Create VIP Account</span>
+                        // </button>
                     )}
 
                 {/* {!isCheckingVIPAccount && (
