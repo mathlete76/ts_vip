@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useWallet, useConnection } from '@solana/wallet-adapter-react';
 
 // Components
-import { Verified } from '../../components/Verified';
+
 import { Landing } from '../../components/Landing';
 import pkg from '../../../package.json';
 
@@ -33,12 +33,9 @@ export const HomeView: FC = ({ }) => {
       <div className="md:hero-content flex flex-col">
         <div className='mt-6'>
         <h1 className="text-center text-5xl md:pl-12 font-bold text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 to-fuchsia-500 mb-4">
-          Trader Skew
+          Goodfellas
         </h1>
         </div>
-        <h4 className="md:w-full text-2x1 md:text-4xl text-center text-slate-300 my-2">
-          <p>VIPs</p>
-        </h4>
         {/* <div className="flex flex-col mt-2">
           <Verified />
         </div> */}
