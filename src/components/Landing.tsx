@@ -63,6 +63,7 @@ export const Landing: FC = () => {
     const [vipAccountAddy, setVipAccountAddy] = useState(null);
     const [isKYCd, setKYCstatus] = useState(null);
 
+    
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
