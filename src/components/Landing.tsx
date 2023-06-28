@@ -5,6 +5,7 @@ import { FC, useCallback, useEffect, useState } from 'react';
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
+import { notify } from 'utils/notifications';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -94,43 +95,39 @@ export const Landing: FC = () => {
         }
     }, [ourWallet, checkVIPAccount]);
 
-
-
-//     const createVIPAccount = useCallback(async () => {
-//         const provider = getProvider();
-//         const program = new Program(idl_object, programID, provider);
+    const createVIPAccount = async () => {
+        const provider = getProvider();
+        const program = new Program(idl_object, programID, provider);
         
-//         try {
-//             const [vipPda] = await PublicKey.findProgramAddressSync([
-//                 utils.bytes.utf8.encode("vip"),
-//                 provider.wallet.publicKey.toBuffer(),
-//             ], program.programId
-//             );
+        try {
+            const [vipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("vip"),
+                provider.wallet.publicKey.toBuffer(),
+            ], program.programId
+            );
     
-//             const tx = await program.methods.initialize().accounts({
-//                 vip: vipPda,
-//                 authority: provider.wallet.publicKey,
-//                 systemProgram: web3.SystemProgram.programId,
-//             }).rpc();
+            const tx = await program.methods.initialize().accounts({
+                vip: vipPda,
+                authority: provider.wallet.publicKey,
+                systemProgram: web3.SystemProgram.programId,
+            }).rpc();
+
+            const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+            await program.provider.connection.confirmTransaction({
+              blockhash: latestBlockHash.blockhash,
+              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+              signature: tx
+            });
+
+            notify({ type: 'success', message: 'Account Created', description: tx });
     
-//             if (program.account.vipAccount) {
-//                 const vipAccount = await program.account.vipAccount.fetch(vipPda);
-//                 // If the account exists, set the state variable
-//                 if (vipAccount) {
-//                     setHasVIPAccount(true);
-//                 }
-//                 console.log("VIP Account created: ", vipAccount);
-//             } else {
-//                 console.log('vipAccount does not exist in the program');
-//             }
-//         } catch (error) {
-//             console.log(error);
-//             // If the account doesn't exist, set state to false
-//             setHasVIPAccount(false);
-//         } finally {
-//             setIsCheckingVIPAccount(false);
-//         }
-//     }, [ourWallet, connection]);
+            console.log("Account Created");
+        } catch (error) {
+            console.log(error);
+            // If the account doesn't exist, set state to false
+            setHasVIPAccount(false);
+        } 
+    };
     
 
 //     const startKYC = useCallback(async () => {
@@ -212,9 +209,9 @@ export const Landing: FC = () => {
 
                         <button
                             className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                            onClick={checkforVIP}
+                            onClick={createVIPAccount}
                         >
-                            <span>Create VIP Account</span>
+                            <span>Create Account</span>
                         </button>
                         </div>
 
