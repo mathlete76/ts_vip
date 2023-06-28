@@ -144,57 +144,81 @@ export const Landing: FC = () => {
     };
 
 
-    //     const startKYC = useCallback(async () => {
-    //         if (!ourWallet) {
-    //             console.log('error', 'Wallet not connected!');
+    const startKYC = async () => {
+        if (!ourWallet) {
+            console.log('error', 'Wallet not connected!');
 
-    //             return;
-    //         }
+            return;
+        }
 
-    //         let payload = {
-    //             reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
-    //             journey_id: "shMlbzzM1687780796",
-    //             callback_url: "https://ts-vip.vercel.app/",
-    //         }
+        let payload = {
+            reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
+            journey_id: "shMlbzzM1687780796",
+            callback_url: "https://ts-vip.vercel.app/",
+        }
 
-    //         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
+        const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
 
-    //         var token = btoa(btoa_string);
+        var token = btoa(btoa_string);
 
-    //         try {
-    //             const response = await fetch('https://api.shuftipro.com/', {
-    //                 method: 'post',
-    //                 headers: {
-    //                     'Accept': 'application/json',
-    //                     'Content-Type': 'application/json',
-    //                     'Authorization': 'Basic ' + token
-    //                 },
-    //                 body: JSON.stringify(payload)
-    //             });
+        try {
+            const response = await fetch('https://api.shuftipro.com/', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic ' + token
+                },
+                body: JSON.stringify(payload)
+            });
 
-    //             const data = await response.json();
+            const data = await response.json();
 
-    //             console.log("KYC RESPONSE: ", data);
+            console.log("KYC RESPONSE: ", data);
 
-    //             if (data.reference) {
-    //                 const kyc_ref = data.reference;
-    //             }
+            if (data.reference) {
+                const kyc_ref = data.reference;
+            }
 
-    //             if (data.event && data.event === 'request.pending') {
-    //                 console.log("KYC REQUEST PENDING");
-    //                 window.open(data.verification_url, '_blank');
+            if (data.event && data.event === 'request.pending') {
+                const provider = getProvider();
+                const program = new Program(idl_object, programID, provider);
 
-    //                 //                window.location.href = data.verification_url; ADD THIS BACK IN AT FINAL STAGE
-    //             } else {
-    //                 console.log("KYC REQUEST ERROR");
-    //                 console.log(data);
-    //             }
+                const [vipPda] = await PublicKey.findProgramAddressSync([
+                    utils.bytes.utf8.encode("tvip"),
+                    provider.wallet.publicKey.toBuffer(),
+                ], program.programId
+                );
 
-    //         } catch (error) {
-    //             console.error('Error starting KYC process:', error);
-    //         }
+                const tx = await program.methods.setReference(data.reference).accounts({
+                    vip: vipPda,
+                    authority: provider.wallet.publicKey,
+                    systemProgram: web3.SystemProgram.programId,
+                }).rpc();
 
-    //     }, [ourWallet, connection, getUserSOLBalance]);
+                const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+                await program.provider.connection.confirmTransaction({
+                    blockhash: latestBlockHash.blockhash,
+                    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                    signature: tx
+                });
+
+                notify({ type: 'success', message: 'KYC Requested', description: tx });
+
+                console.log("KYC REQUEST PENDING");
+                
+                window.location.href = data.verification_url;
+                
+            } else {
+                console.log("KYC REQUEST ERROR");
+                console.log(data);
+            }
+
+        } catch (error) {
+            console.error('Error starting KYC process:', error);
+        }
+
+    };
 
     return (
 
@@ -216,19 +240,21 @@ export const Landing: FC = () => {
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
                     <p>Votes: {vipAccountData.votes}</p>
                     <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
-                    <p>isKYDd: {isKYCd ? "Yes" : (
-                                        <div className="relative group items-center">
-                                        <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
+                    <p>isKYDd: {isKYCd ? "Yes" : (<div>
+                        No
+                        <div className="relative group items-center">
+                            <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                                         rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                                        <button
-                                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                            //onClick={createVIPAccount}
-                                        >
-                                            <span>KYC Process</span>
-                                        </button>
-                                    </div>
+                            <button
+                                className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                                onClick={startKYC}
+                            >
+                                <span>KYC Process</span>
+                            </button>
+                        </div>
+                    </div>
                     )}</p>
-                </div> ) : (
+                </div>) : (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
