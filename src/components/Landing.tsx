@@ -54,39 +54,38 @@ export const Landing: FC = () => {
         }
     };
 
-//     }
 
-//     // SHould I put a function here that checks if the user has a VIP account on-chain?
-//     // If not the rather than the startKYC function, it should be a function that creates a VIP account on-chain
-//     const [isCheckingVIPAccount, setIsCheckingVIPAccount] = useState(true);
-//     const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
-//     const checkVIPAccount = useCallback(async () => {
-//     if (!ourWallet?.publicKey) {
-//         console.log('error', 'Wallet not connected!');
-//         return;
-//     }
+    const [isCheckingVIPAccount, setIsCheckingVIPAccount] = useState(true);
+    const [hasVIPAccount, setHasVIPAccount] = useState(false);
 
-//     const provider = getProvider();
-//     const program = new Program(idl_object, programID, provider);
-//     try {
-//         const [vipPda] = await PublicKey.findProgramAddressSync([
-//             utils.bytes.utf8.encode("vip"),
-//             provider.wallet.publicKey.toBuffer(),
-//         ], program.programId
-//         );
+    const checkVIPAccount = async () => {
+    if (!ourWallet?.publicKey) {
+        console.log('error', 'Wallet not connected!');
+        return;
+    }
 
-//         const vipAccount = await program.account.vipAccount.fetch(vipPda);
-//         // If the fetch method does not throw an error, the account exists
-//         setHasVIPAccount(true);
-//     } catch (error) {
-//         // If the fetch method throws an error, the account does not exist
-//         console.log('VIP account does not exist');
-//         setHasVIPAccount(false);
-//     } finally {
-//         setIsCheckingVIPAccount(false);
-//     }
-// }, [ourWallet, connection, getUserSOLBalance]);
+    const provider = getProvider();
+    const program = new Program(idl_object, programID, provider);
+    try {
+        const [vipPda] = await PublicKey.findProgramAddressSync([
+            utils.bytes.utf8.encode("vip"),
+            provider.wallet.publicKey.toBuffer(),
+        ], program.programId
+        );
+
+        const vipAccount = await program.account.vip.fetch(vipPda);
+        if(vipAccount){
+            setHasVIPAccount(true);
+        }
+    } catch (error) {
+        // If the fetch method throws an error, the account does not exist
+        console.log('VIP account does not exist');
+        setHasVIPAccount(false);
+    } finally {
+        setIsCheckingVIPAccount(false);
+    }
+};
 
 //     useEffect(() => {
 //         if (ourWallet) {
@@ -189,13 +188,23 @@ export const Landing: FC = () => {
             <div className="relative group items-center">
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-
-                    <button
-                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                        onClick={checkforVIP}
-                    >
-                        <span>Dummy </span>
-                    </button>
+                    {!isCheckingVIPAccount && (
+                        hasVIPAccount ? (
+                        <button
+                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                            onClick={checkforVIP}
+                        >
+                            <span>Checks Again </span>
+                        </button>
+                    ) : (
+                        <button
+                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                            onClick={checkforVIP}
+                        >
+                            <span>Create VIP Account</span>
+                        </button>
+                    )
+                )}
 
                 {/* {!isCheckingVIPAccount && (
                     hasVIPAccount ? (
