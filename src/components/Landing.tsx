@@ -81,6 +81,7 @@ export const Landing: FC = () => {
             );
 
             const vipAccount = await program.account.vip.fetch(vipPda);
+
             if (vipAccount) {
                 setHasVIPAccount(true);
                 setVipAccountData(vipAccount);
@@ -89,13 +90,13 @@ export const Landing: FC = () => {
 
             if (vipAccountData && vipAccountData.verified) {
                 setKYCstatus(true);
-            } else if (vipAccountData.reference != null) {
+            } else if (vipAccountData && vipAccountData.reference != null) {
                 setKYCstatus(true);
             } else {
                 setKYCstatus(false);
             }
 
-            if (vipPda.toBase58() === "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
+            if (vipPda && vipPda.toBase58() === "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
                 setAdmin(true);
             }
 
