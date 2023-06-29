@@ -63,7 +63,7 @@ export const Voting: FC = () => {
         if (ourWallet) {
             getMemberList();
         }
-    }, [ourWallet, getMemberList]);
+    }, []);
 
 
 
