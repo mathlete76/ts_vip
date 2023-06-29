@@ -64,6 +64,7 @@ export const Landing: FC = () => {
     const [isKYCd, setKYCstatus] = useState(null);
     const [passedKYC, setPassedKYC] = useState(null);
     const [isAdmin, setAdmin] = useState(null);
+    const [wlReady, setWLReady] = useState(false);
 
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
@@ -98,6 +99,8 @@ export const Landing: FC = () => {
 
             if (ourWallet.publicKey.toBase58() == "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
                 setAdmin(true);
+            } else {
+                setAdmin(false);
             }
 
 
@@ -106,7 +109,35 @@ export const Landing: FC = () => {
             console.log(error);
             setHasVIPAccount(false);
         }
+    };
 
+    const checkFWL = async () => {
+        if (!ourWallet?.publicKey) {
+            console.log('error', 'Wallet not connected!');
+            return;
+        }
+
+        const provider = getProvider();
+        const program = new Program(idl_object, programID, provider);
+        try {
+            const [wlPDA] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("founders_wl"),
+            ], program.programId
+            );
+
+            const founders = await program.account.founders.fetch(wlPDA);
+
+            if (founders) {
+                setWLReady(true);
+            } else {
+                setWLReady(false);
+            };
+
+        } catch (error) {
+            // If the fetch method throws an error, the account does not exist
+            console.log(error);
+            setWLReady(false);
+        }
     };
 
     const checkShuftiStatus = async () => {
@@ -176,6 +207,7 @@ export const Landing: FC = () => {
     useEffect(() => {
         if (ourWallet) {
             checkVIPAccount();
+            checkFWL();
         }
     }, [ourWallet, checkVIPAccount]);
 
@@ -320,6 +352,9 @@ export const Landing: FC = () => {
                             </button>
                             <div>
                                 {isAdmin ? ("Is Admin") : ("Not Admin")}
+                            </div>
+                            <div>
+                                {wlReady ? ("WL Ready") : ("WL Not Ready")}
                             </div>
                         </div>
 
