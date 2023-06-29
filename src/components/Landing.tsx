@@ -93,30 +93,7 @@ export const Landing: FC = () => {
             } else {
                 setKYCstatus(false);
             }
-            // if (!vipAccountData.verified && vipAccountData.reference != null) {
-            //     let payload = {
-            //         reference: vipAccountData.reference,
-            //     }
 
-            //     const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
-
-            //     var token = btoa(btoa_string);
-
-            //     const response = await fetch('https://api.shuftipro.com/status', {
-            //         method: 'post',
-            //         headers: {
-            //             'Accept': 'application/json',
-            //             'Content-Type': 'application/json',
-            //             'Authorization': 'Basic ' + token
-            //         },
-            //         body: JSON.stringify(payload)
-            //     });
-
-            //     const data = await response.json();
-
-            //     console.log("KYC RESPONSE: ", data);
-
-            // }
 
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
@@ -182,6 +159,8 @@ export const Landing: FC = () => {
             console.log("KYC ACCEPTED");
 
             setKYCstatus(true);
+
+            setPassedKYC(true);
 
         }
 
@@ -326,9 +305,8 @@ export const Landing: FC = () => {
                     <p>KYC Ref: {vipAccountData.reference}</p>
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
                     <p>Votes: {vipAccountData.votes}</p>
-                    <p>Member: {vipAccountData.member ? "Yes" : "No"}</p>
-                    <p>isKYDd: {isKYCd ? (<div>
-                        Yes
+                    <p>Goodfella: {vipAccountData.member ? "Yes" : "No"}</p>
+                    {isKYCd ? (
                         <div className="relative group items-center">
                             <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                                         rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
@@ -339,9 +317,8 @@ export const Landing: FC = () => {
                                 <span>KYC to chain</span>
                             </button>
                         </div>
-                    </div>
-                    ) : (<div>
-                        No
+
+                    ) : (
                         <div className="relative group items-center">
                             <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                                         rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
@@ -349,11 +326,11 @@ export const Landing: FC = () => {
                                 className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                                 onClick={startKYC}
                             >
-                                <span>KYC Process</span>
+                                <span>KYC</span>
                             </button>
                         </div>
-                    </div>
-                    )}</p>
+
+                    )}
                 </div>) : (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
@@ -362,7 +339,7 @@ export const Landing: FC = () => {
                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                         onClick={createVIPAccount}
                     >
-                        <span>Create VIP Account</span>
+                        <span>Create Account</span>
                     </button>
                 </div>
 
