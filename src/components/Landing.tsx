@@ -102,7 +102,7 @@ export const Landing: FC = () => {
 
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
-            console.log('VIP account does not exist');
+            console.log(error);
             setHasVIPAccount(false);
         }
 
@@ -348,9 +348,7 @@ export const Landing: FC = () => {
                     </button>
                 </div>
             )}
-            <div>
 
-            </div>
             {isAdmin ? (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
@@ -361,7 +359,7 @@ export const Landing: FC = () => {
                     >
                         <span>Admin</span>
                     </button></div>) : (
-                <div>Not admin</div>
+                <div>Not Admin</div>
             )}
         </div>
 
