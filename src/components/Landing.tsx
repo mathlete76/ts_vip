@@ -87,7 +87,7 @@ export const Landing: FC = () => {
                 setVipAccountAddy(vipPda);
             }
 
-            if (vipAccountData.verified) {
+            if (vipAccountData && vipAccountData.verified) {
                 setKYCstatus(true);
             } else if (vipAccountData.reference != null) {
                 setKYCstatus(true);
