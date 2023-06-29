@@ -111,7 +111,7 @@ export const Landing: FC = () => {
         }
     };
 
-    const checkFWL = async () => {
+    const setFWL = async () => {
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
@@ -129,8 +129,33 @@ export const Landing: FC = () => {
 
             if (founders) {
                 setWLReady(true);
-            } else {
-                setWLReady(false);
+
+                notify({ type: 'info', message: 'FWL Already Set' });
+
+            } else if (!founders && ourWallet.publicKey.toBase58() == "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
+
+                const wl = [
+                    "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2",
+                    "HTbG7NtUuWgEqLtWKP2sukxagNGXH2GXNhEm6JHxqivW",
+                    "4SaQKTMH3ET9ohutNzSMwhn1WjHEc5DMXQL999zQbYJH",
+                    "8YYfBZbLX5zu9dtpoUD164qMfKmM7Qr3RsAnyJ1hwjaa",
+                ];
+
+                const tx = await program.methods.founderWhitelist(wl).accounts({
+                    founders: wlPDA,
+                    authority: provider.wallet.publicKey,
+                    systemProgram: web3.SystemProgram.programId,
+                }).rpc();
+
+                const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+                await program.provider.connection.confirmTransaction({
+                    blockhash: latestBlockHash.blockhash,
+                    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                    signature: tx
+                });
+
+                notify({ type: 'success', message: 'FWL Set', description: tx });
+                
             };
 
         } catch (error) {
@@ -207,9 +232,8 @@ export const Landing: FC = () => {
     useEffect(() => {
         if (ourWallet) {
             checkVIPAccount();
-            checkFWL();
         }
-    }, [ourWallet, checkVIPAccount, checkFWL]);
+    }, [ourWallet, checkVIPAccount]);
 
     const createVIPAccount = async () => {
         const provider = getProvider();
@@ -351,10 +375,18 @@ export const Landing: FC = () => {
                                 <span>KYC to chain</span>
                             </button>
                             <div>
-                                {isAdmin ? ("Is Admin") : ("Not Admin")}
-                            </div>
-                            <div>
-                                {wlReady ? ("WL Ready") : ("WL Not Ready")}
+                                {isAdmin ? (
+                                    <div className="relative group items-center">
+                                        <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500
+                                        rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                                        <button
+                                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                                            onClick={setFWL}
+                                        >
+                                            <span>Set FWL</span>
+                                        </button>
+                                    </div>
+                                ) : <div></div>}
                             </div>
                         </div>
 
@@ -368,9 +400,6 @@ export const Landing: FC = () => {
                             >
                                 <span>KYC</span>
                             </button>
-                            <div>
-                                {isAdmin ? ("Is Admin") : ("Not Admin")}
-                            </div>
                         </div>
                     )}
                 </div>) : (
@@ -383,9 +412,6 @@ export const Landing: FC = () => {
                     >
                         <span>Create Account</span>
                     </button>
-                    <div>
-                        {isAdmin ? ("Is Admin") : ("Not Admin")}
-                    </div>
                 </div>
             )}
         </div>
