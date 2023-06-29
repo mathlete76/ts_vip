@@ -318,6 +318,9 @@ export const Landing: FC = () => {
                             >
                                 <span>KYC to chain</span>
                             </button>
+                            <div>
+                                {isAdmin ? ("Is Admin") : ("Not Admin")}
+                            </div>
                         </div>
 
                     ) : (
@@ -330,6 +333,9 @@ export const Landing: FC = () => {
                             >
                                 <span>KYC</span>
                             </button>
+                            <div>
+                                {isAdmin ? ("Is Admin") : ("Not Admin")}
+                            </div>
                         </div>
                     )}
                 </div>) : (
