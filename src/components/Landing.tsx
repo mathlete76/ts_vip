@@ -103,6 +103,10 @@ export const Landing: FC = () => {
                 setAdmin(false);
             }
 
+            if (vipAccountData && vipAccountData.verified) {
+                setPassedKYC(true);
+            }
+
 
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
