@@ -63,7 +63,7 @@ export const Voting: FC = () => {
         if (ourWallet) {
             getMemberList();
         }
-    }, [ourWallet, memberList]);
+    }, [ourWallet, getMemberList]);
 
 
 
@@ -72,7 +72,7 @@ export const Voting: FC = () => {
     return (
 
         <div className="flex flex-row justify-center">
-           {memberList && memberList.members.map((member) => {member})}
+           {memberList}
         </div>
     );
 };
