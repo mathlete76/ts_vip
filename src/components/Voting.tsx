@@ -5,6 +5,8 @@ import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
+import { set } from 'date-fns';
+import { get } from 'http';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -21,6 +23,7 @@ export const Voting: FC = () => {
         return provider;
     };
 
+    const [retrieved, setRetrieved] = useState(false);
     const [memberList, setMemberList] = useState(null);
 
     const getMemberList = async () => {
@@ -46,6 +49,7 @@ export const Voting: FC = () => {
                 console.log("Member Account Data: ", membersAccountInfo.data);
 
                 setMemberList(membersAccountInfo.data);
+                setRetrieved(true);
 
             } else {
                 console.log("List Account does not exist");
@@ -60,14 +64,10 @@ export const Voting: FC = () => {
 
 
     useEffect(() => {
-        if (ourWallet) {
+        if (!retrieved) {
             getMemberList();
         }
-    }, []);
-
-
-
-
+    }, [ourWallet, getMemberList, retrieved]);
 
     return (
 
