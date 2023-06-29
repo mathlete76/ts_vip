@@ -41,14 +41,14 @@ export const Voting: FC = () => {
             ], program.programId
             );
 
-            const membersAccountInfo = await program.provider.connection.getAccountInfo(membersPda);
+            const membersAccount = await program.account.members.fetch(membersPda);
 
-            if (membersAccountInfo != null) {
+            if (membersAccount != null) {
                 console.log("Member Account Exists");
 
-                console.log("Member Account Data: ", membersAccountInfo.data);
+                console.log("Member Account Data: ", membersAccount);
 
-                setMemberList(membersAccountInfo.data);
+                setMemberList(membersAccount);
                 setRetrieved(true);
 
             } else {
