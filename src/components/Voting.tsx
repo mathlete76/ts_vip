@@ -9,8 +9,6 @@ import { notify } from 'utils/notifications';
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 
-const init_string = "gf_a";
-
 const programID = new PublicKey(idl.metadata.address);
 
 export const Voting: FC = () => {
@@ -37,7 +35,6 @@ export const Voting: FC = () => {
             const program = new Program(idl_object, programID, provider);
             const [membersPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode("members_b"),
-                provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
 
