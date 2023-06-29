@@ -209,7 +209,7 @@ export const Landing: FC = () => {
             checkVIPAccount();
             checkFWL();
         }
-    }, [ourWallet, checkVIPAccount]);
+    }, [ourWallet, checkVIPAccount, checkFWL]);
 
     const createVIPAccount = async () => {
         const provider = getProvider();
