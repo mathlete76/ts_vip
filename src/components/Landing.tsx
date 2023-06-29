@@ -182,7 +182,13 @@ export const Landing: FC = () => {
         }
     }, [ourWallet, checkVIPAccount]);
 
+    const [userInput, setUserInput] = useState('');
+
     const createVIPAccount = async () => {
+        if (!userInput || userInput.length > 64) {
+            notify({ type: 'error', message: 'Invalid username', description: 'Username must be between 1 and 64 characters' });
+            return;
+        }
         const provider = getProvider();
         const program = new Program(idl_object, programID, provider);
 
@@ -194,11 +200,11 @@ export const Landing: FC = () => {
             );
 
             const [founder] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("founders_wl_a"),
-              ], program.programId
-              );
+                utils.bytes.utf8.encode("founders_wl_b"),
+            ], program.programId
+            );
 
-            const tx = await program.methods.initialize("mathlete").accounts({
+            const tx = await program.methods.initialize(userInput).accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
                 founder: founder,
@@ -344,6 +350,12 @@ export const Landing: FC = () => {
                     )}
                 </div>) : (
                 <div className="relative group items-center">
+                    <input
+                        type="text"
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        placeholder="Enter username"
+                    />
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                     <button
