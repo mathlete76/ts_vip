@@ -72,7 +72,7 @@ export const Voting: FC = () => {
     return (
 
         <div className="flex flex-row justify-center">
-            {memberList}
+            {memberList.members.map(member => (member.toBase58()))}
         </div>
     );
 };
