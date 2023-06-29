@@ -100,7 +100,7 @@
         },
         {
           "name": "authority",
-          "isMut": false,
+          "isMut": true,
           "isSigner": true
         }
       ],
@@ -162,6 +162,60 @@
           "type": {
             "vec": "string"
           }
+        }
+      ]
+    },
+    {
+      "name": "initMemberList",
+      "accounts": [
+        {
+          "name": "members",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "memberList",
+          "type": {
+            "vec": "string"
+          }
+        }
+      ]
+    },
+    {
+      "name": "addMember",
+      "accounts": [
+        {
+          "name": "members",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "member",
+          "type": "string"
         }
       ]
     }
@@ -226,6 +280,20 @@
           }
         ]
       }
+    },
+    {
+      "name": "Members",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "members",
+            "type": {
+              "vec": "publicKey"
+            }
+          }
+        ]
+      }
     }
   ],
   "errors": [
@@ -258,6 +326,11 @@
       "code": 6005,
       "name": "InvalidCreator",
       "msg": "Invalid creator"
+    },
+    {
+      "code": 6006,
+      "name": "AlreadyMember",
+      "msg": "Already member"
     }
   ],
   "metadata": {

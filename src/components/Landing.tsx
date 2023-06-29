@@ -175,7 +175,31 @@ export const Landing: FC = () => {
 
             setPassedKYC(true);
 
-        }
+            try {
+                const [membersPDA] = await PublicKey.findProgramAddressSync([
+                    utils.bytes.utf8.encode("members_b"),
+                ], program.programId
+                );
+    
+                const tx = await program.methods.addMember(ourWallet.publicKey).accounts({
+                    members: membersPDA,
+                    authority: provider.wallet.publicKey,
+                    systemProgram: web3.SystemProgram.programId,
+                }).rpc();
+    
+                const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+                await program.provider.connection.confirmTransaction({
+                    blockhash: latestBlockHash.blockhash,
+                    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                    signature: tx
+                });
+    
+                notify({ type: 'success', message: 'Member List Updated', description: tx });
+            } catch (error) {
+                console.log(error);
+            };
+
+        };
 
     };
 
