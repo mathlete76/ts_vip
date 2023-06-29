@@ -124,8 +124,13 @@ export const Landing: FC = () => {
                 utils.bytes.utf8.encode("founders_wl"),
             ], program.programId
             );
-
-            const founders = await program.account.founders.fetch(wlPDA);
+            var founders = null;
+            
+            try {
+                founders = await program.account.founders.fetch(wlPDA);
+            } catch (error) {
+                console.log(error);
+            }
 
             if (founders) {
                 setWLReady(true);
