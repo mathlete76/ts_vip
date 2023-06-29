@@ -1,15 +1,15 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { FC, useCallback, useEffect, useState } from 'react';
-// import { notify } from "../utils/notifications";
 import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
-import { set } from 'date-fns';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
+
+const init_string = "tvip";
 
 const programID = new PublicKey(idl.metadata.address);
 
@@ -34,7 +34,7 @@ export const Landing: FC = () => {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("tvip"),
+                utils.bytes.utf8.encode(init_string),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -75,7 +75,7 @@ export const Landing: FC = () => {
         const program = new Program(idl_object, programID, provider);
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("tvip"),
+                utils.bytes.utf8.encode(init_string),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -142,7 +142,7 @@ export const Landing: FC = () => {
             const program = new Program(idl_object, programID, provider);
 
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("tvip"),
+                utils.bytes.utf8.encode(init_string),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -185,7 +185,7 @@ export const Landing: FC = () => {
 
         try {
             const [vipPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("tvip"),
+                utils.bytes.utf8.encode(init_string),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
@@ -248,16 +248,12 @@ export const Landing: FC = () => {
 
             console.log("KYC RESPONSE: ", data);
 
-            if (data.reference) {
-                const kyc_ref = data.reference;
-            }
-
             if (data.event && data.event === 'request.pending') {
                 const provider = getProvider();
                 const program = new Program(idl_object, programID, provider);
 
                 const [vipPda] = await PublicKey.findProgramAddressSync([
-                    utils.bytes.utf8.encode("tvip"),
+                    utils.bytes.utf8.encode(init_string),
                     provider.wallet.publicKey.toBuffer(),
                 ], program.programId
                 );
@@ -349,7 +345,7 @@ export const Landing: FC = () => {
                     </button>
                 </div>
             )}
-
+            <div>
             {isAdmin ? (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
@@ -362,6 +358,7 @@ export const Landing: FC = () => {
                     </button></div>) : (
                 <div>Not Admin</div>
             )}
+        </div>
         </div>
 
     );
