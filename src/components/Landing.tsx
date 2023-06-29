@@ -349,6 +349,7 @@ export const Landing: FC = () => {
                         </div>
                     )}
                 </div>) : (
+                    <div>
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                     rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
@@ -358,6 +359,7 @@ export const Landing: FC = () => {
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
                     />
+                </div>
 
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
@@ -368,6 +370,7 @@ export const Landing: FC = () => {
                     >
                         <span>Create Account</span>
                     </button>
+                </div>
                 </div>
             )}
         </div>
