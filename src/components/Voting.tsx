@@ -24,7 +24,7 @@ export const Voting: FC = () => {
     };
 
     const [retrieved, setRetrieved] = useState(false);
-    const [memberList, setMemberList] = useState(null);
+    const [memberAccountData, setMemberAccountData] = useState(null);
 
     const getMemberList = async () => {
 
@@ -43,13 +43,14 @@ export const Voting: FC = () => {
 
             const membersAccount = await program.account.members.fetch(membersPda);
 
-            if (membersAccount != null) {
+            if (membersAccount) {
                 console.log("Member Account Exists");
 
                 console.log("Member Account Data: ", membersAccount);
 
-                setMemberList(membersAccount);
+                setMemberAccountData(membersAccount);
                 setRetrieved(true);
+
 
             } else {
                 console.log("List Account does not exist");
@@ -72,7 +73,7 @@ export const Voting: FC = () => {
     return (
 
         <div className="flex flex-row justify-center">
-            Holding
+            {memberAccountData && memberAccountData.members.map((member) => {member.toBase58()})}    
         </div>
     );
 };
