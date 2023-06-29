@@ -9,7 +9,7 @@ import { notify } from 'utils/notifications';
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 
-const init_string = "tvip";
+const init_string = "gf_a";
 
 const programID = new PublicKey(idl.metadata.address);
 
@@ -64,7 +64,7 @@ export const Landing: FC = () => {
     const [isKYCd, setKYCstatus] = useState(null);
     const [passedKYC, setPassedKYC] = useState(null);
     const [isAdmin, setAdmin] = useState(null);
-    const [wlReady, setWLReady] = useState(false);
+
 
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
@@ -111,64 +111,6 @@ export const Landing: FC = () => {
         }
     };
 
-    const setFWL = async () => {
-        if (!ourWallet?.publicKey) {
-            console.log('error', 'Wallet not connected!');
-            return;
-        }
-
-        const provider = getProvider();
-        const program = new Program(idl_object, programID, provider);
-        try {
-            const [wlPDA] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("founders_wl"),
-            ], program.programId
-            );
-            var founders = null;
-            
-            try {
-                founders = await program.account.founders.fetch(wlPDA);
-            } catch (error) {
-                console.log(error);
-            }
-
-            if (founders) {
-                setWLReady(true);
-
-                notify({ type: 'info', message: 'FWL Already Set' });
-
-            } else if (!founders && ourWallet.publicKey.toBase58() == "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
-
-                const wl = [
-                    "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2",
-                    "HTbG7NtUuWgEqLtWKP2sukxagNGXH2GXNhEm6JHxqivW",
-                    "4SaQKTMH3ET9ohutNzSMwhn1WjHEc5DMXQL999zQbYJH",
-                    "8YYfBZbLX5zu9dtpoUD164qMfKmM7Qr3RsAnyJ1hwjaa",
-                ];
-
-                const tx = await program.methods.founderWhitelist(wl).accounts({
-                    founders: wlPDA,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: web3.SystemProgram.programId,
-                }).rpc();
-
-                const latestBlockHash = await program.provider.connection.getLatestBlockhash();
-                await program.provider.connection.confirmTransaction({
-                    blockhash: latestBlockHash.blockhash,
-                    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-                    signature: tx
-                });
-
-                notify({ type: 'success', message: 'FWL Set', description: tx });
-                
-            };
-
-        } catch (error) {
-            // If the fetch method throws an error, the account does not exist
-            console.log(error);
-            setWLReady(false);
-        }
-    };
 
     const checkShuftiStatus = async () => {
         if (!ourWallet?.publicKey) {
@@ -251,9 +193,15 @@ export const Landing: FC = () => {
             ], program.programId
             );
 
+            const [founder] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode("founders_wl_a"),
+              ], program.programId
+              );
+
             const tx = await program.methods.initialize("mathlete").accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
+                founder: founder,
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
 
@@ -379,20 +327,7 @@ export const Landing: FC = () => {
                             >
                                 <span>KYC to chain</span>
                             </button>
-                            <div>
-                                {isAdmin ? (
-                                    <div className="relative group items-center">
-                                        <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500
-                                        rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                                        <button
-                                            className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                            onClick={setFWL}
-                                        >
-                                            <span>Set FWL</span>
-                                        </button>
-                                    </div>
-                                ) : <div></div>}
-                            </div>
+
                         </div>
 
                     ) : (
