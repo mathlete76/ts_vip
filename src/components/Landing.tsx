@@ -348,7 +348,6 @@ export const Landing: FC = () => {
                                         <span>KYC</span>
                                     </button>
                                 </div>
-                                
                             )}
                             </div>) : (
                                     <span className="text-green-500">Verified</span>
