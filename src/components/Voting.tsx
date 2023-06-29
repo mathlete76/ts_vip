@@ -70,10 +70,11 @@ export const Voting: FC = () => {
         }
     }, [ourWallet, getMemberList, retrieved]);
 
+
     return (
 
         <div className="flex flex-row justify-center">
-           <ul>{memberAccountData.members.map(member => <li key={member.toBase58()}> {member.toBase58()}</li>)}</ul>    
+             <ul>{memberAccountData.members.map(member => <li>{member.toBase58()}</li>)}</ul>
         </div>
     );
 };
