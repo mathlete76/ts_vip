@@ -11,6 +11,8 @@ import { get } from 'http';
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 
+const init_string = "gf_a";
+
 const programID = new PublicKey(idl.metadata.address);
 
 export const Voting: FC = () => {
@@ -34,7 +36,13 @@ export const Voting: FC = () => {
 
             const fetchVipAccounts = async () => {
                 const accounts = await Promise.all(
+
                     memberAccountData.members.map(async (member) => {
+                        const [vipPda] = await PublicKey.findProgramAddressSync([
+                            utils.bytes.utf8.encode(init_string),
+                            provider.wallet.publicKey.toBuffer(),
+                        ], program.programId
+                        );
                         const vipAccount = await program.account.vip.fetch(new PublicKey(member));
                         return vipAccount;
                     })
