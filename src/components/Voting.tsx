@@ -29,29 +29,30 @@ export const Voting: FC = () => {
     const [memberAccountData, setMemberAccountData] = useState(null);
     const [vipAccounts, setVipAccounts] = useState([]);
 
-    useEffect(() => {
-        if (retrieved && memberAccountData) {
+    const fetchVipAccounts = useCallback(async () => {
+        if (memberAccountData) {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
+            const accounts = await Promise.all(
+                memberAccountData.members.map(async (member) => {
+                    const [vipPda] = await PublicKey.findProgramAddressSync([
+                        utils.bytes.utf8.encode(init_string),
+                        new PublicKey(member).toBuffer(),
+                    ], program.programId
+                    );
+                    const vipAccount = await program.account.vip.fetch(vipPda);
+                    return vipAccount;
+                })
+            );
+            setVipAccounts(accounts);
+        }
+    }, [memberAccountData]);
 
-            const fetchVipAccounts = async () => {
-                const accounts = await Promise.all(
-
-                    memberAccountData.members.map(async (member) => {
-                        const [vipPda] = await PublicKey.findProgramAddressSync([
-                            utils.bytes.utf8.encode(init_string),
-                            new PublicKey(member).toBuffer(),
-                        ], program.programId
-                        );
-                        const vipAccount = await program.account.vip.fetch(vipPda);
-                        return vipAccount;
-                    })
-                );
-                setVipAccounts(accounts);
-            };
+    useEffect(() => {
+        if (retrieved) {
             fetchVipAccounts();
         }
-    }, [retrieved, memberAccountData]);
+    }, [retrieved, fetchVipAccounts]);
 
     const getMemberList = async () => {
 
@@ -135,6 +136,8 @@ export const Voting: FC = () => {
 
             notify({ type: 'success', message: 'Vote cast!', description: tx});
             console.log("Confirmation: ", confirmation);
+
+            fetchVipAccounts();
 
         } catch (error) {
 
