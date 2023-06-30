@@ -110,6 +110,12 @@ export const Voting: FC = () => {
                             <pre data-prefix=">">
                             <code className="truncate">Votes: {vipAccount.votes}</code>
                             </pre>
+                            <button
+                                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                                       // onClick={checkShuftiStatus}
+                                    >
+                                        <span>Vote</span>
+                                    </button>
                         </div>
                     </div>
                 ))
