@@ -5,13 +5,13 @@ import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
-import { Metaplex } from "@metaplex-foundation/js";
+import { Metaplex, walletAdapterIdentity} from "@metaplex-foundation/js";
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 const programID = new PublicKey(idl.metadata.address);
 
-const mintAddress = new PublicKey("2vuUbfVrHwPf6owFrBHPQzWT1WF8mFQ2YzKK34pEsTL8")
+const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
 
 
 
@@ -24,42 +24,31 @@ export const Nfts: FC = () => {
         return provider;
     };
 
+    const metaplex = Metaplex.make(connection).use(walletAdapterIdentity(ourWallet));
 
+    const [nfts, setNfts] = useState(null);
 
-    const getAssetsByGroup = async () => {
-        const creator = 'DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt';
+    const getNFTs = async () => {
+        const nfts = await metaplex.nfts().findAllByCreator({creator})
 
-        const url = `https://rpc.helius.xyz/?api-key=${process.env.NEXT_PUBLIC_HEL_API_KEY}`;
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              jsonrpc: '2.0',
-              id: 'my-id',
-              method: 'getAssetsByCreator',
-              params: {
-                creatorAddress: creator,
-                onlyVerified: true,
-                page: 1, // Starts at 1
-                limit: 1000
-              },
-            }),
-          });
-          const { result } = await response.json();
-          console.log("Assets by Creator: ", result.items);
-      };
+        setNfts(nfts);
+    }
 
     useEffect(() => {
-        getAssetsByGroup();
-    }
-        , []);
-
-
+        getNFTs();
+    }, []);
 
     return (
         <div className="flex flex-col justify-center">
+            {nfts && nfts.map((nft) => {
+                return (
+                    <div className="flex flex-col justify-center">
+                        <img src={nft.data.uri} />
+                        <p>{nft.data.name}</p>
+                    </div>
+                )
+            }
+            )}
         </div>
     );
 };
