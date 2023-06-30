@@ -105,7 +105,7 @@ export const Voting: FC = () => {
             const program = new Program(idl_object, programID, provider);
             const [recipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode(init_string),
-                new PublicKey(recipient).toBuffer(),
+                recipient.toBuffer(),
             ], program.programId
             );
 
@@ -156,9 +156,12 @@ export const Voting: FC = () => {
                             <pre data-prefix=">">
                             <code className="truncate">Votes: {vipAccount.votes}</code>
                             </pre>
+                            <pre data-prefix=">">
+                            <code className="truncate">Wallet: {vipAccount.user.toBase58()}</code>
+                            </pre>
                             <button
                                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                       onClick={() => castVote(vipAccount.member)}
+                                       onClick={() => castVote(vipAccount.user)}
                                     >
                                         <span>Vote</span>
                                     </button>
