@@ -212,6 +212,27 @@ export const Landing: FC = () => {
         }
     }, [ourWallet, checkVIPAccount]);
 
+    useEffect(() => {
+        // This function checks the KYC status
+        const checkStatus = async () => {
+            if (document.visibilityState === 'visible') {
+                await checkVIPAccount();
+            }
+        };
+    
+        // Call the function once when the component mounts
+        checkStatus();
+    
+        // Set up an event listener to call the function whenever the visibility state changes
+        document.addEventListener('visibilitychange', checkStatus);
+    
+        // Clean up the event listener when the component unmounts
+        return () => {
+            document.removeEventListener('visibilitychange', checkStatus);
+        };
+    }, [checkVIPAccount]);
+    
+
     const [userInput, setUserInput] = useState('');
 
     const createVIPAccount = async () => {
