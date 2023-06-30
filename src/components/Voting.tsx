@@ -104,14 +104,9 @@ export const Voting: FC = () => {
                 vipAccounts.map((vipAccount, index) => (
                     <div key={index} className="relative group bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-indigo-500 rounded-lg blur opacity-40 animate-tilt"></div>
-                        <div className="relative flex items-center space-x-4">
-                            <div className="flex-shrink-0">
-                                <img className="h-10 w-10 rounded-full" src={`https://robohash.org/${vipAccount.username}`} alt="" />
-                            </div>
-                            <div>
-                                <div className="text-sm font-medium text-white">{vipAccount.username}</div>
-                            </div>
-                        </div>
+                        <pre data-prefix=">">
+                                <code className="truncate">{vipAccount.username}</code>
+                            </pre>
                     </div>
                 ))
             ) : (
