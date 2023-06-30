@@ -13,7 +13,7 @@ const init_string = "gf_a";
 
 const programID = new PublicKey(idl.metadata.address);
 
-export const Voting: FC = () => {
+export const Nfts: FC = () => {
     const { connection } = useConnection();
     const ourWallet = useWallet();
     const { getUserSOLBalance } = useUserSOLBalanceStore();
