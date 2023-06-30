@@ -121,15 +121,15 @@ export const Landing: FC = () => {
             console.log('error', 'Wallet not connected!');
             return;
         }
-
+    
         let payload = {
             reference: vipAccountData.reference,
         }
-
+    
         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
-
+    
         var token = btoa(btoa_string);
-
+    
         const response = await fetch('https://api.shuftipro.com/status', {
             method: 'post',
             headers: {
@@ -139,69 +139,70 @@ export const Landing: FC = () => {
             },
             body: JSON.stringify(payload)
         });
-
+    
         const data = await response.json();
-
+    
         console.log("KYC RESPONSE: ", data);
-
+    
         if (data.event && data.event === 'verification.accepted') {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
-
+    
             const [vipPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode(init_string),
                 provider.wallet.publicKey.toBuffer(),
             ], program.programId
             );
-
+    
             const tx = await program.methods.verify(true).accounts({
                 vip: vipPda,
                 authority: provider.wallet.publicKey,
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
-
+    
             const latestBlockHash = await program.provider.connection.getLatestBlockhash();
-            await program.provider.connection.confirmTransaction({
+            const confirmation = await program.provider.connection.confirmTransaction({
                 blockhash: latestBlockHash.blockhash,
                 lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
                 signature: tx
             });
-
+    
             notify({ type: 'success', message: 'KYC Accepted', description: tx });
-
+    
             console.log("KYC ACCEPTED");
-
+    
             setKYCstatus(true);
-
+    
             setPassedKYC(true);
-
-            try {
-                const [membersPDA] = await PublicKey.findProgramAddressSync([
-                    utils.bytes.utf8.encode("members_b"),
-                ], program.programId
-                );
     
-                const tx = await program.methods.addMember(ourWallet.publicKey).accounts({
-                    members: membersPDA,
-                    authority: provider.wallet.publicKey,
-                    systemProgram: web3.SystemProgram.programId,
-                }).rpc();
+            if (!confirmation.value.err) {
+                try {
+                    const [membersPDA] = await PublicKey.findProgramAddressSync([
+                        utils.bytes.utf8.encode("members_b"),
+                    ], program.programId
+                    );
     
-                const latestBlockHash = await program.provider.connection.getLatestBlockhash();
-                await program.provider.connection.confirmTransaction({
-                    blockhash: latestBlockHash.blockhash,
-                    lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-                    signature: tx
-                });
+                    const tx2 = await program.methods.addMember(ourWallet.publicKey).accounts({
+                        members: membersPDA,
+                        authority: provider.wallet.publicKey,
+                        systemProgram: web3.SystemProgram.programId,
+                    }).rpc();
     
-                notify({ type: 'success', message: 'Member List Updated', description: tx });
-            } catch (error) {
-                console.log(error);
-            };
-
+                    const latestBlockHash2 = await program.provider.connection.getLatestBlockhash();
+                    await program.provider.connection.confirmTransaction({
+                        blockhash: latestBlockHash2.blockhash,
+                        lastValidBlockHeight: latestBlockHash2.lastValidBlockHeight,
+                        signature: tx2
+                    });
+    
+                    notify({ type: 'success', message: 'Member List Updated', description: tx2 });
+                } catch (error) {
+                    console.log(error);
+                };
+            }
         };
-
     };
+    
 
 
     useEffect(() => {
