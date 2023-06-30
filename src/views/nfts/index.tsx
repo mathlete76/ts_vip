@@ -1,6 +1,5 @@
 
 import { Nfts } from "components/Nfts";
-import { V } from "drizzle-orm/column.d-b7dc3bdb";
 import { FC } from "react";
 
 

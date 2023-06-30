@@ -7,10 +7,10 @@ const Nfts: NextPage = (props) => {
   return (
     <div>
       <Head>
-        <title>Solana Scaffold</title>
+        <title>Goodfellas</title>
         <meta
-          name="description"
-          content="Basic Functionality"
+          name="Goodfellas"
+          content="Registration, Voting and NFTs"
         />
       </Head>
       <NftsView />

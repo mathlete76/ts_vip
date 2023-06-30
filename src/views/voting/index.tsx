@@ -1,6 +1,5 @@
 
 import { Voting } from "components/Voting";
-import { V } from "drizzle-orm/column.d-b7dc3bdb";
 import { FC } from "react";
 
 
