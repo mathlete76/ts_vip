@@ -216,7 +216,10 @@ export const Landing: FC = () => {
         // This function checks the KYC status
         const checkStatus = async () => {
             if (document.visibilityState === 'visible') {
-                await checkVIPAccount();
+                // Wait for 1 second before checking the KYC status
+                setTimeout(async () => {
+                    await checkVIPAccount();
+                }, 3000);
             }
         };
     
@@ -231,6 +234,7 @@ export const Landing: FC = () => {
             document.removeEventListener('visibilitychange', checkStatus);
         };
     }, [checkVIPAccount]);
+    
     
 
     const [userInput, setUserInput] = useState('');
