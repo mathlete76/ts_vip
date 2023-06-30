@@ -151,6 +151,8 @@ export const Voting: FC = () => {
         <div className="flex flex-col justify-center">
             {vipAccounts.length > 0 ? (
                 vipAccounts.map((vipAccount, index) => (
+                    <div>
+                        { vipAccount.member ? (
                     <div key={index} className="relative group">
                         <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                         <pre data-prefix=">">
@@ -166,6 +168,7 @@ export const Voting: FC = () => {
                                         <span>Vote</span>
                                     </button>
                         </div>
+                    </div> ) : (<div></div>)}
                     </div>
                 ))
             ) : (
