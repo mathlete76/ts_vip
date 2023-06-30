@@ -182,7 +182,7 @@ export const Landing: FC = () => {
                     ], program.programId
                     );
     
-                    const tx2 = await program.methods.addMember(ourWallet.publicKey).accounts({
+                    const tx2 = await program.methods.addMember(ourWallet.publicKey.toBase58()).accounts({
                         members: membersPDA,
                         authority: provider.wallet.publicKey,
                         systemProgram: web3.SystemProgram.programId,
@@ -197,6 +197,7 @@ export const Landing: FC = () => {
     
                     notify({ type: 'success', message: 'Member List Updated', description: tx2 });
                 } catch (error) {
+                    notify({ type: 'error', message: 'Member List Update Failed', description: error });
                     console.log(error);
                 };
             }
