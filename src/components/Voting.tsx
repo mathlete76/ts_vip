@@ -109,11 +109,15 @@ export const Voting: FC = () => {
             ], program.programId
             );
 
+            console.log("Recipient PDA: ", recipPda.toBase58());
+
             const [voterPda] = await PublicKey.findProgramAddressSync([
                 utils.bytes.utf8.encode(init_string),
                 ourWallet.publicKey.toBuffer(),
             ], program.programId
             );
+
+            console.log("Voter PDA: ", voterPda.toBase58());
 
             const tx = await program.methods.vote().accounts({
                 vip: recipPda,
