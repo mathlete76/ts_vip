@@ -156,9 +156,6 @@ export const Voting: FC = () => {
                             <pre data-prefix=">">
                             <code className="truncate">Votes: {vipAccount.votes}</code>
                             </pre>
-                            <pre data-prefix=">">
-                            <code className="truncate">Wallet: {vipAccount.user.toBase58()}</code>
-                            </pre>
                             <button
                                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                                        onClick={() => castVote(vipAccount.user)}
