@@ -1,9 +1,8 @@
-import { Voting } from "components/Voting";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { VotingView } from "views/voting";
 
-const Home: NextPage = (props) => {
+const Voting: NextPage = (props) => {
   return (
     <div>
       <Head>
