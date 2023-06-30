@@ -40,10 +40,10 @@ export const Voting: FC = () => {
                     memberAccountData.members.map(async (member) => {
                         const [vipPda] = await PublicKey.findProgramAddressSync([
                             utils.bytes.utf8.encode(init_string),
-                            provider.wallet.publicKey.toBuffer(),
+                            new PublicKey(member).toBuffer(),
                         ], program.programId
                         );
-                        const vipAccount = await program.account.vip.fetch(new PublicKey(member));
+                        const vipAccount = await program.account.vip.fetch(vipPda);
                         return vipAccount;
                     })
                 );
