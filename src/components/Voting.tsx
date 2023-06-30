@@ -72,7 +72,7 @@ export const Voting: FC = () => {
 
 
     return (
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-col justify-center">
             {retrieved && memberAccountData ? (
                 memberAccountData.members.map((member, index) => (
                     <li key={index}>{member.toBase58()}</li>
