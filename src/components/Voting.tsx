@@ -72,9 +72,14 @@ export const Voting: FC = () => {
 
 
     return (
-
         <div className="flex flex-row justify-center">
-             Holding
+            {retrieved && memberAccountData ? (
+                memberAccountData.members.map((member, index) => (
+                    <p key={index}>{member.toBase58()}</p>
+                ))
+            ) : (
+                <p>No members</p>
+            )}
         </div>
     );
 };
