@@ -32,6 +32,8 @@ export const Nfts: FC = () => {
         const nfts = await metaplex.nfts().findAllByCreator({creator})
 
         setNfts(nfts);
+
+        console.log(nfts);
     }
 
     useEffect(() => {
@@ -40,15 +42,7 @@ export const Nfts: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-            {nfts && nfts.map((nft) => {
-                return (
-                    <div className="flex flex-col justify-center">
-                        <img src={nft.uri} />
-                        <p>{nft.name}</p>
-                    </div>
-                )
-            }
-            )}
+            Holder Space
         </div>
     );
 };
