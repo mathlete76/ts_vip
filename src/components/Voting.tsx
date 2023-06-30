@@ -88,14 +88,56 @@ export const Voting: FC = () => {
         }
     };
 
-
-
-
     useEffect(() => {
         if (!retrieved) {
             getMemberList();
         }
     }, [ourWallet, getMemberList, retrieved]);
+
+    const castVote = async (recipient) => {
+        if (!ourWallet?.publicKey) {
+            console.log('error', 'Wallet not connected!');
+            return;
+        }
+
+        try {
+            const provider = getProvider();
+            const program = new Program(idl_object, programID, provider);
+            const [recipPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode(init_string),
+                new PublicKey(recipient).toBuffer(),
+            ], program.programId
+            );
+
+            const [voterPda] = await PublicKey.findProgramAddressSync([
+                utils.bytes.utf8.encode(init_string),
+                ourWallet.publicKey.toBuffer(),
+            ], program.programId
+            );
+
+            const tx = await program.methods.vote().accounts({
+                vip: recipPda,
+                voter: voterPda,
+                authority: ourWallet.publicKey,
+                systemProgram: web3.SystemProgram.programId,
+            }).rpc();
+
+            const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+            const confirmation = await program.provider.connection.confirmTransaction({
+                blockhash: latestBlockHash.blockhash,
+                lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+                signature: tx
+            });
+
+            notify({ type: 'success', message: 'Vote cast!', description: tx});
+            console.log("Confirmation: ", confirmation);
+
+        } catch (error) {
+
+            notify({ type: 'error', message: 'Error casting vote!', description: error.message });
+            console.log(error);
+        }
+    };
 
 
     return (
@@ -112,7 +154,7 @@ export const Voting: FC = () => {
                             </pre>
                             <button
                                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                       // onClick={checkShuftiStatus}
+                                       onClick={() => castVote(vipAccount.member)}
                                     >
                                         <span>Vote</span>
                                     </button>
