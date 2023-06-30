@@ -26,31 +26,33 @@ export const Nfts: FC = () => {
 
 
 
-    const getAssetsByOwner = async () => {
+    const getAssetsByGroup = async () => {
+        const creator = 'DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt';
 
         const url = `https://rpc.helius.xyz/?api-key=${process.env.NEXT_PUBLIC_HEL_API_KEY}`;
         const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 'my-id',
-            method: 'getAssetsByOwner',
-            params: {
-              ownerAddress: ourWallet.publicKey.toBase58(),
-              page: 1, // Starts at 1
-              limit: 1000
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
-          }),
-        });
-        const { result } = await response.json();
-        console.log("Assets by Owner: ", result.items);
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 'my-id',
+              method: 'getAssetsByCreator',
+              params: {
+                creatorAddress: creator,
+                onlyVerified: true,
+                page: 1, // Starts at 1
+                limit: 1000
+              },
+            }),
+          });
+          const { result } = await response.json();
+          console.log("Assets by Creator: ", result.items);
       };
 
     useEffect(() => {
-        getAssetsByOwner();
+        getAssetsByGroup();
     }
         , []);
 
