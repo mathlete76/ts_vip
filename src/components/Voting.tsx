@@ -25,6 +25,25 @@ export const Voting: FC = () => {
 
     const [retrieved, setRetrieved] = useState(false);
     const [memberAccountData, setMemberAccountData] = useState(null);
+    const [vipAccounts, setVipAccounts] = useState([]);
+
+    useEffect(() => {
+        if (retrieved && memberAccountData) {
+            const provider = getProvider();
+            const program = new Program(idl_object, programID, provider);
+
+            const fetchVipAccounts = async () => {
+                const accounts = await Promise.all(
+                    memberAccountData.members.map(async (member) => {
+                        const vipAccount = await program.account.vip.fetch(new PublicKey(member));
+                        return vipAccount;
+                    })
+                );
+                setVipAccounts(accounts);
+            };
+            fetchVipAccounts();
+        }
+    }, [retrieved, memberAccountData]);
 
     const getMemberList = async () => {
 
@@ -73,14 +92,17 @@ export const Voting: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-            {retrieved && memberAccountData ? (
-                memberAccountData.members.map((member, index) => (
-                    <div key={index} className="relative group">
+            {vipAccounts.length > 0 ? (
+                vipAccounts.map((vipAccount, index) => (
+                    <div key={index} className="relative group bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                         <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-indigo-500 rounded-lg blur opacity-40 animate-tilt"></div>
-                        <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                            <pre data-prefix=">">
-                                <code className="truncate">{member.toBase58()}</code>
-                            </pre>
+                        <div className="relative flex items-center space-x-4">
+                            <div className="flex-shrink-0">
+                                <img className="h-10 w-10 rounded-full" src={`https://robohash.org/${vipAccount.username}`} alt="" />
+                            </div>
+                            <div>
+                                <div className="text-sm font-medium text-white">{vipAccount.username}</div>
+                            </div>
                         </div>
                     </div>
                 ))
