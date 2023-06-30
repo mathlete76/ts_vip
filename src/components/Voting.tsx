@@ -75,9 +75,7 @@ export const Voting: FC = () => {
         <div className="flex flex-col justify-center">
             {retrieved && memberAccountData ? (
                 memberAccountData.members.map((member, index) => (
-                    <pre data-prefix=">">
-                        <code className="truncate">{member.toBase58()}</code>
-                    </pre>
+                    <li key={index}>{member.toBase58()}</li>
                 ))
             ) : (
                 <p>No members</p>
@@ -85,4 +83,3 @@ export const Voting: FC = () => {
         </div>
     );
 };
-
