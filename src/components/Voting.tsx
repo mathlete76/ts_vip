@@ -104,9 +104,11 @@ export const Voting: FC = () => {
                 vipAccounts.map((vipAccount, index) => (
                     <div key={index} className="relative group">
                         <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                        <pre data-prefix=">">
+                                <code className="truncate">{vipAccount.username}</code>
+                            </pre>
                             <pre data-prefix=">">
-                                <p><code className="truncate">{vipAccount.username}</code></p>
-                                <p><code className="truncate">Votes: {vipAccount.votes}</code></p>
+                            <code className="truncate">Votes: {vipAccount.votes}</code>
                             </pre>
                         </div>
                     </div>
