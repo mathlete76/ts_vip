@@ -43,8 +43,8 @@ export const Nfts: FC = () => {
             {nfts && nfts.map((nft) => {
                 return (
                     <div className="flex flex-col justify-center">
-                        <img src={nft.data.uri} />
-                        <p>{nft.data.name}</p>
+                        <img src={nft.uri} />
+                        <p>{nft.name}</p>
                     </div>
                 )
             }
