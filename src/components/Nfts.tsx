@@ -24,7 +24,7 @@ const programID = new PublicKey(idl.metadata.address);
 
 const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
 
-const mintKeyPair = Keypair.fromSecretKey(new Uint8Array([process.env.NEXT_PUBLIC_MINTKEYPAIR] as any));
+const mintKeyPair = web3.Keypair.fromSecretKey(new Uint8Array(process.env.NEXT_PUBLIC_MINTKEYPAIR as any));
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
