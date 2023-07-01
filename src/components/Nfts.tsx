@@ -48,9 +48,9 @@ export const Nfts: FC = () => {
             }),
         });
         const { result } = await response.json();
-        console.log("Assets by Owner: ", result.items);
+        console.log("Assets by Owner: ", result);
 
-        setNfts(result.items);
+        setNfts(result);
 
     }
 
@@ -62,7 +62,6 @@ export const Nfts: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-            {nfts}
         </div>
     );
 };
