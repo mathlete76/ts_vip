@@ -41,7 +41,7 @@ export const Nfts: FC = () => {
               id: 'my-id',
               method: 'getAssetsByOwner',
               params: {
-                ownerAddress: '86xCnPeV69n6t3DnyGvkKobf9FdN2H9oiVDdaMpo2MMY',
+                ownerAddress: ourWallet?.publicKey?.toBase58(),
                 page: 1, // Starts at 1
                 limit: 1000
               },
