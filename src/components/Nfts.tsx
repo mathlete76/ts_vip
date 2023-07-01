@@ -29,7 +29,7 @@ export const Nfts: FC = () => {
     const [nfts, setNfts] = useState(null);
 
     const getNFTs = async () => {
-        const nfts = await metaplex.nfts().findAllByCreator({creator})
+        const nfts = await metaplex.nfts().findAllByOwner({owner: creator})
 
         setNfts(nfts);
 
