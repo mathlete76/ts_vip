@@ -28,38 +28,49 @@ export const Nfts: FC = () => {
 
     const [nfts, setNfts] = useState(null);
 
+    // const getNFTs = async () => {
+    //     const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
+
+    //     const response = await fetch(url, {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({
+    //             jsonrpc: '2.0',
+    //             id: 'my-id',
+    //             method: 'getAssetsByOwner',
+    //             params: {
+    //                 ownerAddress: creator.toBase58(),
+    //                 page: 1, // Starts at 1
+    //                 limit: 1000
+    //             },
+    //         }),
+    //     });
+    //     const { result } = await response.json();
+    //     console.log("Assets by Owner: ", result);
+
+    //     const nfts = await Promise.all(result.items.map(async (nft) => {
+    //         const metadataResponse = await fetch(nft.content.json_uri);
+    //         const metadata = await metadataResponse.json();
+    //         return { ...nft, metadata };
+    //     }));
+
+    //     setNfts(nfts);
+
+    //     console.log("NFTs: ", nfts);
+
+    // }
+
     const getNFTs = async () => {
-        const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                jsonrpc: '2.0',
-                id: 'my-id',
-                method: 'getAssetsByOwner',
-                params: {
-                    ownerAddress: creator.toBase58(),
-                    page: 1, // Starts at 1
-                    limit: 1000
-                },
-            }),
-        });
-        const { result } = await response.json();
-        console.log("Assets by Owner: ", result);
-
-        const nfts = await Promise.all(result.items.map(async (nft) => {
-            const metadataResponse = await fetch(nft.content.json_uri);
-            const metadata = await metadataResponse.json();
-            return { ...nft, metadata };
-        }));
+        const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
+        
+        const nfts = await metaplex.nfts().findAllByOwner({owner: creator});
 
         setNfts(nfts);
 
         console.log("NFTs: ", nfts);
-
     }
 
     useEffect(() => {
@@ -70,7 +81,8 @@ export const Nfts: FC = () => {
 
     return (
         <div className="grid grid-cols-5 gap-4">
-    {nfts && nfts.map((nft, index) => (
+            Holding Space
+    {/* {nfts && nfts.map((nft, index) => (
         <div key={index} className="relative group">
             <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                 <img src={nft.metadata.image} alt={nft.metadata.name} />
@@ -79,7 +91,7 @@ export const Nfts: FC = () => {
                             </pre>
             </div>
         </div>
-    ))}
+    ))} */}
     </div>
     );
 };
