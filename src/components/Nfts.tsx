@@ -96,7 +96,9 @@ export const Nfts: FC = () => {
 
         const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
 
-        const repull = await metaplex.nfts().findByMint(nft.mintAddress.toBase58());
+        const mintAddress = nft.mintAddress.toBase58()
+
+        const repull = await metaplex.nfts().findByMint({ mintAddress });
 
         console.log("Repull: ", repull);
 
