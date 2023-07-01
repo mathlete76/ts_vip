@@ -94,7 +94,7 @@ export const Nfts: FC = () => {
             return;
         }
 
-        console.log("NFT: ", nft.metadata.mintAddress.toBase58());
+        console.log("NFT: ", nft.metadata.mintAddress);
     };
         
 
