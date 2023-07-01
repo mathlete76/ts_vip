@@ -69,20 +69,14 @@ export const Nfts: FC = () => {
     }, [ourWallet]);
 
     return (
-<div className="grid grid-cols-5 gap-4">
-    {/* {nfts && nfts.map((nft, index) => (
+        <div>
+    {nfts && nfts.map((nft, index) => (
         <div key={index} className="relative group">
-            <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                <img src={nft.metadata.image} alt={nft.metadata.name} className="w-full h-auto" />
-                <pre data-prefix=">">
-                    <code className="truncate">{nft.metadata.name}</code>
-                </pre>
-                <pre data-prefix=">">
-                    <code className="truncate">{nft.metadata.description}</code>
-                </pre>
+            <div>
+                <img src={nft.metadata.image} alt={nft.metadata.name} />
             </div>
         </div>
-    ))} */}
-</div>
+    ))}
+    </div>
     );
 };
