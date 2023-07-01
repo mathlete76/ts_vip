@@ -37,8 +37,10 @@ export const Nfts: FC = () => {
     }
 
     useEffect(() => {
+        if (!ourWallet?.publicKey){
         getNFTs();
-    }, []);
+        }
+    }, [ourWallet]);
 
     return (
         <div className="flex flex-col justify-center">
