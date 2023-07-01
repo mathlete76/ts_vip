@@ -66,9 +66,9 @@ export const Nfts: FC = () => {
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-center">
                         <h2>{nft.content.metadata.name}</h2>
-                        </div>
-                        </div>
-                        ))}
-            </div>
+                    </div>
+                </div>
+            ))}
+        </div>
     );
 };
