@@ -6,6 +6,7 @@ import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { createAssociatedTokenAccount } from '@solana/spl-token';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -93,12 +94,7 @@ export const Nfts: FC = () => {
             return;
         }
 
-        const mint = nft.metadata.mintAddress;
-        const response = await connection.getParsedTokenAccountsByOwner(ourWallet.publicKey, {
-            mint: mint,
-          });
-
-          console.log("response: ", response);
+        console.log("NFT: ", nft.metadata.name);
     };
         
 
