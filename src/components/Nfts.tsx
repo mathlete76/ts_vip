@@ -109,7 +109,7 @@ export const Nfts: FC = () => {
 
     return (
         <div>
-            <div className="relative group items-center">
+            {/* <div className="relative group items-center">
                 <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                                                 rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                 <button
@@ -119,22 +119,21 @@ export const Nfts: FC = () => {
                     <span>Create Goodfella</span>
                 </button>
 
-            </div>
+            </div> */}
             <div className="grid grid-cols-5 gap-4">
                 {nfts && nfts
                     .filter(nft => nft.name !== 'Goodfellas Collection')
                     .map((nft, index) => (
                         <div key={index} className="relative group">
                             <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                                {/* <img
+                                <img
                                 src={nft.metadata.image}
                                 alt={nft.metadata.name}
                                 onClick={() => {
                                     setCurrentImage(nft.metadata.image);
                                     setIsModalOpen(true);
-                                    nftToVault(nft);
                                 }}
-                            /> */}
+                            />
                                 <pre data-prefix=">">
                                     <code className="truncate">{nft.name}</code>
                                 </pre>
