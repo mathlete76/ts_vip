@@ -24,7 +24,7 @@ const programID = new PublicKey(idl.metadata.address);
 
 const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
 
-
+const mintKeyPair = Keypair.generate();
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
@@ -76,11 +76,13 @@ export const Nfts: FC = () => {
         const provider = getProvider();
         const program = new Program(jdl_object, minterID, provider);
 
+
+
         const metadataAddress = (PublicKey.findProgramAddressSync(
             [
                 Buffer.from("metadata"),
                 TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-                ourWallet.publicKey.toBuffer(),
+                mintKeyPair.publicKey.toBuffer(),
             ],
             TOKEN_METADATA_PROGRAM_ID
         ))[0];
@@ -91,18 +93,58 @@ export const Nfts: FC = () => {
             "GF Test", "GF", nftUri
         ).accounts({
             metadataAccount: metadataAddress,
-            mintAccount: ourWallet.publicKey,
+            mintAccount: mintKeyPair.publicKey,
             mintAuthority: ourWallet.publicKey,
             payer: ourWallet.publicKey,
             rent: web3.SYSVAR_RENT_PUBKEY,
             systemProgram: web3.SystemProgram.programId,
             tokenProgram: utils.token.TOKEN_PROGRAM_ID,
             tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-        }).rpc();
+        }).signers([mintKeyPair]).rpc();
 
-        console.log("Success!");
+        console.log("NFT Ready!");
         console.log(`   Mint Address: ${ourWallet.publicKey}`);
         console.log(`   Tx Signature: ${sx}`);
+
+        notify({ message: "NFT Ready to Mint!", type: "success" });
+
+        const editionAddress = (web3.PublicKey.findProgramAddressSync(
+            [
+              Buffer.from("metadata"),
+              TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+              mintKeyPair.publicKey.toBuffer(),
+              Buffer.from("edition"),
+            ],
+            TOKEN_METADATA_PROGRAM_ID
+        ))[0];
+
+        const associatedTokenAccountAddress = await utils.token.associatedAddress({
+            mint: mintKeyPair.publicKey,
+            owner: ourWallet.publicKey,
+          });
+
+          const sx2 = await program.methods.mintTo()
+          .accounts({
+            associatedTokenAccount: associatedTokenAccountAddress,
+            editionAccount: editionAddress,
+            metadataAccount: metadataAddress,
+            mintAccount: mintKeyPair.publicKey,
+            mintAuthority: ourWallet.publicKey,
+            payer: ourWallet.publicKey,
+            rent: web3.SYSVAR_RENT_PUBKEY,
+            systemProgram: web3.SystemProgram.programId,
+            tokenProgram: utils.token.TOKEN_PROGRAM_ID,
+            associatedTokenProgram: ASSOCIATED_PROGRAM_ID,
+            tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+          })
+          .signers([])
+          .rpc();
+
+          console.log("Success!");
+          console.log(`   ATA Address: ${associatedTokenAccountAddress}`);
+          console.log(`   Tx Signature: ${sx2}`);
+
+          notify({ message: "NFT Minted!", type: "success" });
     };
 
 
@@ -120,6 +162,17 @@ export const Nfts: FC = () => {
                 </button>
 
             </div> */}
+            <div>
+                <div className="relative group items-center">
+                    <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500
+                                                rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                    <button
+                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                        onClick={mintNFT}
+                    >
+                        <span>Create Goodfella</span>
+                    </button>
+                    </div>
             <div className="grid grid-cols-5 gap-4">
                 {nfts && nfts
                     .filter(nft => nft.name !== 'Goodfellas Collection')
@@ -160,6 +213,7 @@ export const Nfts: FC = () => {
                 </div>
             )}
             </div>
+        </div>
         </div>
     );
 };
