@@ -5,7 +5,7 @@ import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
-import { Metaplex, walletAdapterIdentity} from "@metaplex-foundation/js";
+import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -26,7 +26,7 @@ export const Nfts: FC = () => {
 
 
 
-    const [nfts, setNfts] = useState(null);
+    const [nfts, setNfts] = useState([]);
 
     const getNFTs = async () => {
         const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
@@ -34,37 +34,39 @@ export const Nfts: FC = () => {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              jsonrpc: '2.0',
-              id: 'my-id',
-              method: 'getAssetsByOwner',
-              params: {
-                ownerAddress: ourWallet?.publicKey?.toBase58(),
-                page: 1, // Starts at 1
-                limit: 1000
-              },
+                jsonrpc: '2.0',
+                id: 'my-id',
+                method: 'getAssetsByOwner',
+                params: {
+                    ownerAddress: ourWallet?.publicKey?.toBase58(),
+                    page: 1, // Starts at 1
+                    limit: 1000
+                },
             }),
-          });
-          const { result } = await response.json();
-          console.log("Assets by Owner: ", result.items);
+        });
+        const { result } = await response.json();
+        console.log("Assets by Owner: ", result.items);
 
         setNfts(result);
 
     }
 
     useEffect(() => {
-        if (ourWallet?.publicKey){
-        getNFTs();
+        if (ourWallet?.publicKey) {
+            getNFTs();
         }
     }, [ourWallet]);
 
     return (
         <div className="flex flex-col justify-center">
             {nfts.map((nft) => (
-                <div className="flex flex-row justify-center">
-                    {nft}
+                <div className="flex flex-col justify-center">
+                    <div className="flex flex-row justify-center">
+                        <h2> {nft.content.metadata.name}</h2>
+                    </div>
                 </div>
             ))}
         </div>
