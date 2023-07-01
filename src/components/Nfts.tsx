@@ -26,7 +26,7 @@ export const Nfts: FC = () => {
 
 
 
-    const [nfts, setNfts] = useState([]);
+    const [nfts, setNfts] = useState(null);
 
     const getNFTs = async () => {
         const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
@@ -62,6 +62,14 @@ export const Nfts: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-        </div>
+        {nfts && nfts.items.map((nft, index) => (
+            <div key={nft.id}>
+                <h2>{nft.content.metadata.name}</h2>
+                {nft.content.json_uri}
+                <p>{nft.content.metadata.description}</p>
+                {/* Add more fields as needed */}
+            </div>
+        ))}
+    </div>
     );
 };
