@@ -7,6 +7,16 @@ import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import { createAssociatedTokenAccount, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
+import jdl from "./nft_minter.json";
+import {
+    PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID
+} from '@metaplex-foundation/mpl-token-metadata';
+
+import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token';
+
+const jdl_string = JSON.stringify(jdl);
+const jdl_object = JSON.parse(jdl_string);
+const minterID = new PublicKey(jdl.metadata.address);
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -30,40 +40,6 @@ export const Nfts: FC = () => {
     const [nfts, setNfts] = useState(null);
     const [rawNfts, setRawNfts] = useState(null);
 
-    // const getNFTs = async () => {
-    //     const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
-
-    //     const response = await fetch(url, {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({
-    //             jsonrpc: '2.0',
-    //             id: 'my-id',
-    //             method: 'getAssetsByOwner',
-    //             params: {
-    //                 ownerAddress: creator.toBase58(),
-    //                 page: 1, // Starts at 1
-    //                 limit: 1000
-    //             },
-    //         }),
-    //     });
-    //     const { result } = await response.json();
-    //     console.log("Assets by Owner: ", result);
-
-    //     const nfts = await Promise.all(result.items.map(async (nft) => {
-    //         const metadataResponse = await fetch(nft.content.json_uri);
-    //         const metadata = await metadataResponse.json();
-    //         return { ...nft, metadata };
-    //     }));
-
-    //     setNfts(nfts);
-
-    //     console.log("NFTs: ", nfts);
-
-    // }
-
     const getNFTs = async () => {
 
         const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
@@ -78,7 +54,6 @@ export const Nfts: FC = () => {
             return { ...nft, metadata };
         }));
 
-
         setNfts(nfts);
 
         console.log("NFTs: ", nfts);
@@ -91,43 +66,67 @@ export const Nfts: FC = () => {
         }
     }, [ourWallet]);
 
+    const mintNFT = async () => {
 
-    const nftToVault = async (nft) => {
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
         }
 
+        const provider = getProvider();
+        const program = new Program(jdl_object, minterID, provider);
 
-        for (var prop in nft) {
-            console.log(prop, nft[prop]);
-        }
+        const metadataAddress = (PublicKey.findProgramAddressSync(
+            [
+                Buffer.from("metadata"),
+                TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+                ourWallet.publicKey.toBuffer(),
+            ],
+            TOKEN_METADATA_PROGRAM_ID
+        ))[0];
 
-        // console.log("NFT: ", nft.mintAddress.toBase58());
+        const nftUri = "https://vzxpwzi5mngabkh6ycdk6i7j6wzywgymgkg7hrwu5wczksug6yua.arweave.net/rm77ZR1jTACo_sCGryPp9bOLGwwyjfPG1O2FlUqG9ig"
 
-        // 
+        const sx = await program.methods.createToken(
+            "GF Test", "GF", nftUri
+        ).accounts({
+            metadataAccount: metadataAddress,
+            mintAccount: ourWallet.publicKey,
+            mintAuthority: ourWallet.publicKey,
+            payer: ourWallet.publicKey,
+            rent: web3.SYSVAR_RENT_PUBKEY,
+            systemProgram: web3.SystemProgram.programId,
+            tokenProgram: utils.token.TOKEN_PROGRAM_ID,
+            tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+        }).rpc();
 
-        // const tnft = await metaplex.nfts().findByMint({ mint: nft.mintAddress.toBase58() });
-        // console.log("NFT: ", nft_x);
-
-        // const transfer = await metaplex.nfts().transfer({
-        //     nftOrSft: nft_x,
-        //     authority: ourWallet,
-        //     fromOwner: ourWallet.publicKey,
-        //     toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
-        // });
-
+        console.log("Success!");
+        console.log(`   Mint Address: ${ourWallet.publicKey}`);
+        console.log(`   Tx Signature: ${sx}`);
     };
 
 
+
     return (
-        <div className="grid grid-cols-5 gap-4">
-            {rawNfts && rawNfts
-                .filter(nft => nft.name !== 'Goodfellas Collection')
-                .map((nft, index) => (
-                    <div key={index} className="relative group">
-                        <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                            {/* <img
+        <div>
+            <div className="relative group items-center">
+                <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
+                                                rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                <button
+                    className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                    onClick={mintNFT}
+                >
+                    <span>KYC to chain</span>
+                </button>
+
+            </div>
+            <div className="grid grid-cols-5 gap-4">
+                {nfts && nfts
+                    .filter(nft => nft.name !== 'Goodfellas Collection')
+                    .map((nft, index) => (
+                        <div key={index} className="relative group">
+                            <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                                {/* <img
                                 src={nft.metadata.image}
                                 alt={nft.metadata.name}
                                 onClick={() => {
@@ -136,13 +135,13 @@ export const Nfts: FC = () => {
                                     nftToVault(nft);
                                 }}
                             /> */}
-                            <pre data-prefix=">">
-                                <code className="truncate">{nft.name}</code>
-                            </pre>
+                                <pre data-prefix=">">
+                                    <code className="truncate">{nft.name}</code>
+                                </pre>
+                            </div>
                         </div>
-                    </div>
-                ))}
-            {/* {isModalOpen && (
+                    ))}
+                {/* {isModalOpen && (
                 <div
                     style={{
                         position: 'fixed',
@@ -161,6 +160,7 @@ export const Nfts: FC = () => {
                     <img src={currentImage} alt="" />
                 </div>
             )} */}
+            </div>
         </div>
     );
 };
