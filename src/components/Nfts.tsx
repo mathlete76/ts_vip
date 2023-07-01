@@ -62,8 +62,14 @@ export const Nfts: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-            Holder Space
-            {nfts ? "Yes" : "No"}
+            {nfts.map((nft) => (
+                <div className="flex flex-row justify-center">
+                    <div className="flex flex-col justify-center">
+                        <h2>{nft.content.json_uri}</h2>
+                        <h2>{nft.content.metadata.name}</h2>
+                    </div>
+                </div>
+            ))}
         </div>
     );
 };
