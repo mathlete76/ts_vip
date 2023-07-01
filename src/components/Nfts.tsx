@@ -74,6 +74,9 @@ export const Nfts: FC = () => {
         <div key={index} className="relative group">
             <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                 <img src={nft.metadata.image} alt={nft.metadata.name} />
+                <pre data-prefix=">">
+                                <code className="truncate">{nft.metadata.name}</code>
+                            </pre>
             </div>
         </div>
     ))}
