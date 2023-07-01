@@ -64,7 +64,6 @@ export const Landing: FC = () => {
     const [isKYCd, setKYCstatus] = useState(null);
     const [passedKYC, setPassedKYC] = useState(null);
     const [isAdmin, setAdmin] = useState(null);
-    
 
 
     const checkVIPAccount = async () => {
@@ -208,10 +207,10 @@ export const Landing: FC = () => {
 
 
     useEffect(() => {
-        if (ourWallet?.connected) {
+        if (ourWallet) {
             checkVIPAccount();
         }
-    }, [ourWallet?.connected]);
+    }, [ourWallet, checkVIPAccount]);
 
     useEffect(() => {
         // This function checks the KYC status
@@ -434,4 +433,3 @@ export const Landing: FC = () => {
         </div>
     );
 };
-
