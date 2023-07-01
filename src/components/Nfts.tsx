@@ -65,8 +65,14 @@ export const Nfts: FC = () => {
     const getNFTs = async () => {
 
         const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
-        
-        const nfts = await metaplex.nfts().findAllByOwner({owner: creator});
+
+        const result = await metaplex.nfts().findAllByOwner({ owner: creator });
+
+        const nfts = await Promise.all(result.map(async (nft) => {
+            const metadataResponse = await fetch(nft.uri);
+            const metadata = await metadataResponse.json();
+            return { ...nft, metadata };
+        }));
 
         setNfts(nfts);
 
@@ -81,17 +87,16 @@ export const Nfts: FC = () => {
 
     return (
         <div className="grid grid-cols-5 gap-4">
-            Holding Space
-    {/* {nfts && nfts.map((nft, index) => (
-        <div key={index} className="relative group">
-            <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                <img src={nft.metadata.image} alt={nft.metadata.name} />
-                <pre data-prefix=">">
-                                <code className="truncate">{nft.metadata.name}</code>
-                            </pre>
-            </div>
+            {nfts && nfts.map((nft, index) => (
+                <div key={index} className="relative group">
+                    <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                        <img src={nft.metadata.image} alt={nft.metadata.name} />
+                        <pre data-prefix=">">
+                            <code className="truncate">{nft.metadata.name}</code>
+                        </pre>
+                    </div>
+                </div>
+            ))}
         </div>
-    ))} */}
-    </div>
     );
 };
