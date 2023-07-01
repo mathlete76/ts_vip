@@ -24,8 +24,8 @@ export const Nfts: FC = () => {
         return provider;
     };
 
-
-
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentImage, setCurrentImage] = useState(null);
     const [nfts, setNfts] = useState(null);
 
     // const getNFTs = async () => {
@@ -89,17 +89,43 @@ export const Nfts: FC = () => {
     return (
         <div className="grid grid-cols-5 gap-4">
             {nfts && nfts
-            .filter(nft => nft.metadata.name !== 'Goodfellas Collection')
-            .map((nft, index) => (
-                <div key={index} className="relative group">
-                    <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                        <img src={nft.metadata.image} alt={nft.metadata.name} />
-                        <pre data-prefix=">">
-                            <code className="truncate">{nft.metadata.name}</code>
-                        </pre>
+                .filter(nft => nft.metadata.name !== 'Goodfellas Collection')
+                .map((nft, index) => (
+                    <div key={index} className="relative group">
+                        <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                            <img
+                                src={nft.metadata.image}
+                                alt={nft.metadata.name}
+                                onClick={() => {
+                                    setCurrentImage(nft.metadata.image);
+                                    setIsModalOpen(true);
+                                }}
+                            />
+                            <pre data-prefix=">">
+                                <code className="truncate">{nft.metadata.name}</code>
+                            </pre>
+                        </div>
                     </div>
+                ))}
+            {isModalOpen && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        zIndex: 1000,
+                    }}
+                    onClick={() => setIsModalOpen(false)}
+                >
+                    <img src={currentImage} alt="" />
                 </div>
-            ))}
+            )}
         </div>
     );
 };
