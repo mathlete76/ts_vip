@@ -28,6 +28,7 @@ export const Nfts: FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentImage, setCurrentImage] = useState(null);
     const [nfts, setNfts] = useState(null);
+    const [rawNfts, setRawNfts] = useState(null);
 
     // const getNFTs = async () => {
     //     const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
@@ -69,6 +70,8 @@ export const Nfts: FC = () => {
 
         const result = await metaplex.nfts().findAllByOwner({ owner: creator });
 
+        setRawNfts(result);
+
         const nfts = await Promise.all(result.map(async (nft) => {
             const metadataResponse = await fetch(nft.uri);
             const metadata = await metadataResponse.json();
@@ -79,6 +82,7 @@ export const Nfts: FC = () => {
         setNfts(nfts);
 
         console.log("NFTs: ", nfts);
+        console.log("Raw NFTs: ", result);
     }
 
     useEffect(() => {
