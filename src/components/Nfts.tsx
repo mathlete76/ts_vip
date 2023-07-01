@@ -50,7 +50,7 @@ export const Nfts: FC = () => {
         const { result } = await response.json();
         console.log("Assets by Owner: ", result.items);
 
-        setNfts(result);
+        setNfts(result.items);
 
     }
 
@@ -65,10 +65,10 @@ export const Nfts: FC = () => {
             {nfts.map((nft) => (
                 <div className="flex flex-col justify-center">
                     <div className="flex flex-row justify-center">
-                        <h2> {nft.content.metadata.name}</h2>
-                    </div>
-                </div>
-            ))}
-        </div>
+                        <h2>{nft.content.metadata.name}</h2>
+                        </div>
+                        </div>
+                        ))}
+            </div>
     );
 };
