@@ -69,10 +69,10 @@ export const Nfts: FC = () => {
     }, [ourWallet]);
 
     return (
-        <div>
+        <div className="grid grid-cols-5 gap-4">
     {nfts && nfts.map((nft, index) => (
         <div key={index} className="relative group">
-            <div>
+            <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
                 <img src={nft.metadata.image} alt={nft.metadata.name} />
             </div>
         </div>
