@@ -122,12 +122,12 @@ export const Nfts: FC = () => {
 
     return (
         <div className="grid grid-cols-5 gap-4">
-            {nfts && nfts
-                .filter(nft => nft.metadata.name !== 'Goodfellas Collection')
+            {rawNfts && rawNfts
+                .filter(nft => nft.name !== 'Goodfellas Collection')
                 .map((nft, index) => (
                     <div key={index} className="relative group">
                         <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                            <img
+                            {/* <img
                                 src={nft.metadata.image}
                                 alt={nft.metadata.name}
                                 onClick={() => {
@@ -135,9 +135,9 @@ export const Nfts: FC = () => {
                                     setIsModalOpen(true);
                                     nftToVault(nft);
                                 }}
-                            />
+                            /> */}
                             <pre data-prefix=">">
-                                <code className="truncate">{nft.metadata.name}</code>
+                                <code className="truncate">{nft.name}</code>
                             </pre>
                         </div>
                     </div>
