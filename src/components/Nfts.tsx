@@ -37,7 +37,7 @@ export const Nfts: FC = () => {
     }
 
     useEffect(() => {
-        if (!ourWallet?.publicKey){
+        if (ourWallet?.publicKey){
         getNFTs();
         }
     }, [ourWallet]);
