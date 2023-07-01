@@ -50,7 +50,13 @@ export const Nfts: FC = () => {
         const { result } = await response.json();
         console.log("Assets by Owner: ", result);
 
-        setNfts(result);
+        const nfts = await Promise.all(result.items.map(async (nft) => {
+            const metadataResponse = await fetch(nft.content.json_uri);
+            const metadata = await metadataResponse.json();
+            return { ...nft, metadata };
+        }));
+
+        setNfts(nfts);
 
     }
 
@@ -62,14 +68,13 @@ export const Nfts: FC = () => {
 
     return (
         <div className="flex flex-col justify-center">
-        {nfts && nfts.items.map((nft, index) => (
-            <div key={nft.id}>
-                <h2>{nft.content.metadata.name}</h2>
-                {nft.content.json_uri}
-                <p>{nft.content.metadata.description}</p>
-                {/* Add more fields as needed */}
-            </div>
-        ))}
-    </div>
+            {nfts && nfts.map((nft, index) => (
+                <div key={nft.id}>
+                    <h2>{nft.metadata.name}</h2>
+                    <img src={nft.metadata.image} alt={nft.metadata.name} />
+                    {/* Add more fields as needed */}
+                </div>
+            ))}
+        </div>
     );
 };
