@@ -116,7 +116,7 @@ export const Nfts: FC = () => {
                     className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                     onClick={mintNFT}
                 >
-                    <span>KYC to chain</span>
+                    <span>Create Goodfella</span>
                 </button>
 
             </div>
