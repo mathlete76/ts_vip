@@ -94,22 +94,17 @@ export const Nfts: FC = () => {
             return;
         }
 
+        console.log("NFT: ", nft.mintAddress.toBase58());
+
         const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
 
-        const mintAddress = nft.mintAddress.toBase58()
-
-        const repull = await metaplex.nfts().findByMint({ mintAddress });
-
-        console.log("Repull: ", repull);
-
         const transfer = await metaplex.nfts().transfer({
-            nftOrSft: repull,
+            nftOrSft: nft,
             authority: ourWallet,
             fromOwner: ourWallet.publicKey,
             toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
         });
 
-        console.log("NFT: ", nft.mintAddress.toBase58());
     };
         
 
