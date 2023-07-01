@@ -6,7 +6,6 @@ import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { TokenPocketWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -88,24 +87,19 @@ export const Nfts: FC = () => {
     }, [ourWallet]);
 
 
-    const nftToVault = async (tnft) => {
+    const nftToVault = async (nft) => {
         if(!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
         }
 
-        const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
+        const mint = nft.metadata.mintAddress;
+        const response = await connection.getParsedTokenAccountsByOwner(ourWallet.publicKey, {
+            mint: mint,
+          });
 
-        const vaultTransfer = await metaplex.nfts().transfer({
-            nftOrSft: tnft,
-            authority: ourWallet,
-            fromOwner: ourWallet.publicKey,
-            toOwner: programID,
-        });
-
-        console.log("Vault Transfer: ", vaultTransfer);
-    }
-
+          console.log("response: ", response);
+    };
         
 
     return (
