@@ -24,7 +24,7 @@ const programID = new PublicKey(idl.metadata.address);
 
 const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
 
-const mintKeyPair = Keypair.generate();
+const mintKeyPair = Keypair.fromSecretKey(new Uint8Array(process.env.NEXT_PUBLIC_MINTKEYPAIR as any));
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
@@ -76,8 +76,6 @@ export const Nfts: FC = () => {
         const provider = getProvider();
         const program = new Program(jdl_object, minterID, provider);
 
-
-
         const metadataAddress = (PublicKey.findProgramAddressSync(
             [
                 Buffer.from("metadata"),
@@ -87,7 +85,7 @@ export const Nfts: FC = () => {
             TOKEN_METADATA_PROGRAM_ID
         ))[0];
 
-        const nftUri = "https://vzxpwzi5mngabkh6ycdk6i7j6wzywgymgkg7hrwu5wczksug6yua.arweave.net/rm77ZR1jTACo_sCGryPp9bOLGwwyjfPG1O2FlUqG9ig"
+        const nftUri = "https://arweave.net/HFta7uewB1QWCZ0gPw8xFyzBlqHI3DD4TH9-xuMmfcc"
 
         const sx = await program.methods.createToken(
             "GF Test", "GF", nftUri
