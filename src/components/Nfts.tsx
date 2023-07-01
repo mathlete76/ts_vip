@@ -96,8 +96,7 @@ export const Nfts: FC = () => {
 
 
         for (var prop in nft) {
-            console.log("Key:" + prop);
-            console.log("Value:" + nft[prop]);
+            console.log(prop, nft[prop]);
         }
 
         // console.log("NFT: ", nft.mintAddress.toBase58());
