@@ -94,6 +94,17 @@ export const Nfts: FC = () => {
             return;
         }
 
+        const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
+
+        let nft_x;
+
+        if(nft.model === "metadata") {
+            console.log("NFT is a metadata NFT");
+            nft_x = await metaplex.nfts().load(nft);
+        } else  {
+            nft_x = nft;
+        };
+
         console.log("model: ", nft.model);
         console.log("mint: ", nft.address.toBase58());
         console.log("metaAddy: ", nft.metadataAddress);
@@ -102,16 +113,17 @@ export const Nfts: FC = () => {
 
         // console.log("NFT: ", nft.mintAddress.toBase58());
 
-        // const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
+        // 
 
         // const tnft = await metaplex.nfts().findByMint({ mint: nft.mintAddress.toBase58() });
+        console.log("NFT: ", nft_x);
 
-        // const transfer = await metaplex.nfts().transfer({
-        //     nftOrSft: nft,
-        //     authority: ourWallet,
-        //     fromOwner: ourWallet.publicKey,
-        //     toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
-        // });
+        const transfer = await metaplex.nfts().transfer({
+            nftOrSft: nft_x,
+            authority: ourWallet,
+            fromOwner: ourWallet.publicKey,
+            toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
+        });
 
     };
         
