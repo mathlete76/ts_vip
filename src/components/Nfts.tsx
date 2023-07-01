@@ -96,8 +96,12 @@ export const Nfts: FC = () => {
 
         const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
 
+        const repull = await metaplex.nfts().findByMint(nft.mintAddress);
+
+        console.log("Repull: ", repull);
+
         const transfer = await metaplex.nfts().transfer({
-            nftOrSft: nft,
+            nftOrSft: repull,
             authority: ourWallet,
             fromOwner: ourWallet.publicKey,
             toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
