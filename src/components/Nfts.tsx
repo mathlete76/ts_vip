@@ -6,6 +6,7 @@ import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
+import { TokenPocketWalletAdapter } from '@solana/wallet-adapter-wallets';
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -86,6 +87,27 @@ export const Nfts: FC = () => {
         }
     }, [ourWallet]);
 
+
+    const nftToVault = async (tnft) => {
+        if(!ourWallet?.publicKey) {
+            console.log('error', 'Wallet not connected!');
+            return;
+        }
+
+        const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
+
+        const vaultTransfer = await metaplex.nfts().transfer({
+            nftOrSft: tnft,
+            authority: ourWallet,
+            fromOwner: ourWallet.publicKey,
+            toOwner: programID,
+        });
+
+        console.log("Vault Transfer: ", vaultTransfer);
+    }
+
+        
+
     return (
         <div className="grid grid-cols-5 gap-4">
             {nfts && nfts
@@ -99,6 +121,7 @@ export const Nfts: FC = () => {
                                 onClick={() => {
                                     setCurrentImage(nft.metadata.image);
                                     setIsModalOpen(true);
+                                    nftToVault(nft);
                                 }}
                             />
                             <pre data-prefix=">">
@@ -107,7 +130,7 @@ export const Nfts: FC = () => {
                         </div>
                     </div>
                 ))}
-            {isModalOpen && (
+            {/* {isModalOpen && (
                 <div
                     style={{
                         position: 'fixed',
@@ -125,7 +148,7 @@ export const Nfts: FC = () => {
                 >
                     <img src={currentImage} alt="" />
                 </div>
-            )}
+            )} */}
         </div>
     );
 };
