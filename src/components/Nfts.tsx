@@ -24,16 +24,34 @@ export const Nfts: FC = () => {
         return provider;
     };
 
-    const metaplex = Metaplex.make(connection).use(walletAdapterIdentity(ourWallet));
+
 
     const [nfts, setNfts] = useState(null);
 
     const getNFTs = async () => {
-        const nfts = await metaplex.nfts().findAllByCreator({creator})
+        const url = 'https://rpc.helius.xyz/?api-key=' + process.env.NEXT_PUBLIC_HEL_API_KEY;
 
-        setNfts(nfts);
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 'my-id',
+              method: 'getAssetsByOwner',
+              params: {
+                ownerAddress: '86xCnPeV69n6t3DnyGvkKobf9FdN2H9oiVDdaMpo2MMY',
+                page: 1, // Starts at 1
+                limit: 1000
+              },
+            }),
+          });
+          const { result } = await response.json();
+          console.log("Assets by Owner: ", result.items);
 
-        console.log(nfts);
+        setNfts(result);
+
     }
 
     useEffect(() => {
