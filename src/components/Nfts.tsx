@@ -96,7 +96,7 @@ export const Nfts: FC = () => {
 
         console.log("model: ", nft.model);
         console.log("mint: ", nft.address.toBase58());
-        console.log("mint: ", nft.metadatAddress);
+        console.log("metaAddy: ", nft.metadataAddress);
         console.log("json: ", nft.json);
         console.log("Standard: ", nft.tokenStandard);
 
