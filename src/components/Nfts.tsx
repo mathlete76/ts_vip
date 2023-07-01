@@ -45,7 +45,7 @@ export const Nfts: FC = () => {
     return (
         <div className="flex flex-col justify-center">
             Holder Space
-            {nfts}
+            {nfts ? "Yes" : "No"}
         </div>
     );
 };
