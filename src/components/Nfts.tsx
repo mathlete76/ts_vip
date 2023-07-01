@@ -140,7 +140,7 @@ export const Nfts: FC = () => {
                             </div>
                         </div>
                     ))}
-                {/* {isModalOpen && (
+                {isModalOpen && (
                 <div
                     style={{
                         position: 'fixed',
@@ -158,7 +158,7 @@ export const Nfts: FC = () => {
                 >
                     <img src={currentImage} alt="" />
                 </div>
-            )} */}
+            )}
             </div>
         </div>
     );
