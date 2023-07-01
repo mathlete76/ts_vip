@@ -89,44 +89,33 @@ export const Nfts: FC = () => {
 
 
     const nftToVault = async (nft) => {
-        if(!ourWallet?.publicKey) {
+        if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
         }
 
-        const metaplex = new Metaplex(connection).use(walletAdapterIdentity(ourWallet));
 
-        let nft_x;
-
-        if(nft.model === "metadata") {
-            console.log("NFT is a metadata NFT");
-            nft_x = await metaplex.nfts().load(nft);
-        } else  {
-            nft_x = nft;
-        };
-
-        console.log("model: ", nft.model);
-        console.log("mint: ", nft.address.toBase58());
-        console.log("metaAddy: ", nft.metadataAddress);
-        console.log("json: ", nft.json);
-        console.log("Standard: ", nft.tokenStandard);
+        for (var prop in nft) {
+            console.log("Key:" + prop);
+            console.log("Value:" + nft[prop]);
+        }
 
         // console.log("NFT: ", nft.mintAddress.toBase58());
 
         // 
 
         // const tnft = await metaplex.nfts().findByMint({ mint: nft.mintAddress.toBase58() });
-        console.log("NFT: ", nft_x);
+        // console.log("NFT: ", nft_x);
 
-        const transfer = await metaplex.nfts().transfer({
-            nftOrSft: nft_x,
-            authority: ourWallet,
-            fromOwner: ourWallet.publicKey,
-            toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
-        });
+        // const transfer = await metaplex.nfts().transfer({
+        //     nftOrSft: nft_x,
+        //     authority: ourWallet,
+        //     fromOwner: ourWallet.publicKey,
+        //     toOwner: new PublicKey("87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2")
+        // });
 
     };
-        
+
 
     return (
         <div className="grid grid-cols-5 gap-4">
