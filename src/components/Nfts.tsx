@@ -119,30 +119,42 @@ export const Nfts: FC = () => {
 
     };
 
+    const extractNFT = (nft) => {
+        const uri = nft.uri;
+        const metadataResponse = await fetch(nft.uri);
+        const metadata = await metadataResponse.json();
 
-    return (
-        <div className="grid grid-cols-5 gap-4">
-            {rawNfts && rawNfts
-                .filter(nft => nft.name !== 'Goodfellas Collection')
-                .map((nft, index) => (
-                    <div key={index} className="relative group">
-                        <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                            {/* <img
-                                src={nft.metadata.image}
-                                alt={nft.metadata.name}
-                                onClick={() => {
-                                    setCurrentImage(nft.metadata.image);
-                                    setIsModalOpen(true);
-                                    nftToVault(nft);
-                                }}
-                            /> */}
-                            <pre data-prefix=">">
-                                <code className="truncate">{nft.name}</code>
-                            </pre>
+        return (
+            <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
+                <img
+                    src={metadata.image}
+                    alt={nft.name}
+                    onClick={() => {
+                        setCurrentImage(metadata.image);
+                        setIsModalOpen(true);
+                        nftToVault(nft);
+                    }}
+                />
+                <pre data-prefix=">">
+                    <code className="truncate">{nft.name}</code>
+                </pre>
+            </div>
+        )
+    }
+
+
+
+
+        return (
+            <div className="grid grid-cols-5 gap-4">
+                {rawNfts && rawNfts
+                    .filter(nft => nft.name !== 'Goodfellas Collection')
+                    .map((nft, index) => (
+                        <div key={index} className="relative group">
+                            {extractNFT(nft)}
                         </div>
-                    </div>
-                ))}
-            {/* {isModalOpen && (
+                    ))}
+                {isModalOpen && (
                 <div
                     style={{
                         position: 'fixed',
@@ -160,7 +172,7 @@ export const Nfts: FC = () => {
                 >
                     <img src={currentImage} alt="" />
                 </div>
-            )} */}
-        </div>
-    );
-};
+            )}
+            </div>
+        );
+    };
