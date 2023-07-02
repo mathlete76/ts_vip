@@ -68,6 +68,8 @@ export const Nfts: FC = () => {
 
     const mintNFT = async (nftUri) => {
 
+        const uri = nftUri;
+
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
@@ -102,7 +104,7 @@ export const Nfts: FC = () => {
             ))[0];
 
             const sx = await program.methods.createToken(
-                "GF Test", "GF", nftUri
+                "GF Test", "GF", uri
             ).accounts({
                 metadataAccount: metadataAddress,
                 mintAccount: mintKeyPair.publicKey,
@@ -206,7 +208,7 @@ export const Nfts: FC = () => {
 
                                         <pre data-prefix=">">
                                         <code className='truncate'><button
-                                        onClick={() => mintNFT(nft)}>Mint Goodfella</button></code>
+                                        onClick={() => mintNFT(nft.uri)}>Mint Goodfella</button></code>
                                         </pre>
 
                                 </div>
