@@ -87,11 +87,12 @@ export const Nfts: FC = () => {
         ], prog_x.programId
         );
 
-        const vipAccount = await prog_x.account.vip.fetch(vipPda);
+
+        const vipAccount = await prog_x.account.vip.fetch(vipPda) as any;
 
         setVipAccountData(vipAccount);
 
-        if (vipAccountData.nft) {
+        if (vipAccount.nft) {
             notify({ message: "NFT Already Minted!", type: "error" });
             return;
         } else if (vipAccountData.votes === 5 && vipAccountData.nft === null && vipAccountData.verified === true && vipAccountData.member === true) {
