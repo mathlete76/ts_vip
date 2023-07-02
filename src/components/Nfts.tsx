@@ -173,7 +173,7 @@ export const Nfts: FC = () => {
 
 
             const sx3 = await prog_x.methods.setNft(mintKeyPair.publicKey).accounts({
-                vipAccount: vipPda,
+                vip: vipPda,
                 payer: provider.wallet.publicKey,
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
