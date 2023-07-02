@@ -60,6 +60,32 @@
       ]
     },
     {
+      "name": "setNft",
+      "accounts": [
+        {
+          "name": "vip",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "nft",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
       "name": "verify",
       "accounts": [
         {
