@@ -95,7 +95,7 @@ export const Nfts: FC = () => {
         if (vipAccount.nft) {
             notify({ message: "NFT Already Minted!", type: "error" });
             return;
-        } else if (vipAccount.votes === 5 && vipAccount.nft === null && vipAccount.verified === true && vipAccount.member === true) {
+        } else if (vipAccount.nft === null && vipAccount.verified === true && vipAccount.member === true) {
 
             const metadataAddress = (PublicKey.findProgramAddressSync(
                 [
