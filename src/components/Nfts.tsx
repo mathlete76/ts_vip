@@ -21,10 +21,11 @@ const minterID = new PublicKey(jdl.metadata.address);
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 const programID = new PublicKey(idl.metadata.address);
+const init_string = "gf_a";
 
 const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
 
-const mintKeyPair = web3.Keypair.fromSecretKey(new Uint8Array(process.env.NEXT_PUBLIC_MINTKEYPAIR as any));
+const mintKeyPair = web3.Keypair.generate();
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
@@ -75,6 +76,17 @@ export const Nfts: FC = () => {
 
         const provider = getProvider();
         const program = new Program(jdl_object, minterID, provider);
+
+        const prog_x = new Program(idl_object, programID, provider);
+        const [vipPda] = await PublicKey.findProgramAddressSync([
+          utils.bytes.utf8.encode(init_string),
+          provider.wallet.publicKey.toBuffer(),
+      ], prog_x.programId
+      );
+
+      const vipAccount = await prog_x.account.vip.fetch(vipPda);
+
+
 
         const metadataAddress = (PublicKey.findProgramAddressSync(
             [
@@ -141,6 +153,16 @@ export const Nfts: FC = () => {
           console.log(`   Tx Signature: ${sx2}`);
 
           notify({ message: "NFT Minted!", type: "success" });
+          
+
+
+            const sx3 = await prog_x.methods.setNft().accounts({
+                vipAccount: vipPda,
+                payer: provider.wallet.publicKey,
+                systemProgram: web3.SystemProgram.programId,
+            }).rpc();
+
+            console.log("Success!");
     };
 
 
