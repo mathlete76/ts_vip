@@ -66,9 +66,9 @@ export const Nfts: FC = () => {
         }
     }, [ourWallet]);
 
-    const mintNFT = async (nftUri) => {
+    const mintNFT = async (nft) => {
 
-        const uri = nftUri;
+        const uri = nft.uri;
 
         console.log("URI: ", uri);
 
@@ -210,7 +210,7 @@ export const Nfts: FC = () => {
 
                                         <pre data-prefix=">">
                                         <code className='truncate'><button
-                                        onClick={() => mintNFT(nft.uri)}>Mint Goodfella</button></code>
+                                        onClick={() => mintNFT(nft)}>Mint Goodfella</button></code>
                                         </pre>
 
                                 </div>
