@@ -205,12 +205,8 @@ export const Nfts: FC = () => {
                                         </pre>
 
                                         <pre data-prefix=">">
-                                        <code className='truncate'>
-                                            {/* <button
-                                        onClick={() => mintNFT(nft.uri)}> */}
-                                            {nft.collection.address.toBase58()}
-                                            {/* </button> */}
-                                            </code>
+                                        <code className='truncate'><button
+                                        onClick={() => mintNFT(nft.uri)}>Mint Goodfella</button></code>
                                         </pre>
 
                                 </div>
