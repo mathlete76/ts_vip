@@ -66,7 +66,7 @@ export const Nfts: FC = () => {
         }
     }, [ourWallet]);
 
-    const mintNFT = async () => {
+    const mintNFT = async (nftUri) => {
 
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
@@ -84,8 +84,6 @@ export const Nfts: FC = () => {
             ],
             TOKEN_METADATA_PROGRAM_ID
         ))[0];
-
-        const nftUri = "https://arweave.net/HFta7uewB1QWCZ0gPw8xFyzBlqHI3DD4TH9-xuMmfcc"
 
         const sx = await program.methods.createToken(
             "GF Test", "GF", nftUri
@@ -166,7 +164,7 @@ export const Nfts: FC = () => {
                                                 rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
                     <button
                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                        onClick={mintNFT}
+                        onClick={() => mintNFT("https://arweave.net/HFta7uewB1QWCZ0gPw8xFyzBlqHI3DD4TH9-xuMmfcc")}
                     >
                         <span>Create Goodfella</span>
                     </button>

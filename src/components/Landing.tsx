@@ -207,7 +207,7 @@ export const Landing: FC = () => {
 
 
     useEffect(() => {
-        if (ourWallet) {
+        if (ourWallet && !vipAccountData) {
             checkVIPAccount();
         }
     }, [ourWallet, checkVIPAccount]);
