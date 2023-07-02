@@ -87,6 +87,8 @@ export const Nfts: FC = () => {
         ], prog_x.programId
         );
 
+        console.log("VIP PDA: ", vipPda.toBase58());
+
 
         const vipAccount = await prog_x.account.vip.fetch(vipPda) as any;
 
@@ -170,7 +172,7 @@ export const Nfts: FC = () => {
                 signature: sx2
             });
 
-
+            console.log("Before the setNFT call: ", vipPda.toBase58());
 
             const sx3 = await prog_x.methods.setNft(mintKeyPair.publicKey).accounts({
                 vip: vipPda,
