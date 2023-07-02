@@ -70,6 +70,8 @@ export const Nfts: FC = () => {
 
         const uri = nftUri;
 
+        console.log("URI: ", uri);
+
         if (!ourWallet?.publicKey) {
             console.log('error', 'Wallet not connected!');
             return;
