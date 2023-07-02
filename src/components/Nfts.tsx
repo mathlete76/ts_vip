@@ -11,7 +11,6 @@ import {
 } from '@metaplex-foundation/mpl-token-metadata';
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token';
-import { min } from 'date-fns';
 
 const jdl_string = JSON.stringify(jdl);
 const jdl_object = JSON.parse(jdl_string);
@@ -196,11 +195,17 @@ export const Nfts: FC = () => {
                                     <img
                                         src={nft.metadata.image}
                                         alt={nft.metadata.name}
-                                        onClick={() => mintNFT(nft.uri)}
+                                        onClick={() => {
+                                            setCurrentImage(nft.metadata.image);
+                                            setIsModalOpen(true);
+                                        }}
                                     />
                                     <pre data-prefix=">">
                                         <code className="truncate">{nft.name}</code>
+                                        <code className='truncate'><button
+                                        onClick={() => mintNFT(nft.uri)}>Mint Goodfella</button></code>
                                     </pre>
+
                                 </div>
                             </div>
                         ))}
