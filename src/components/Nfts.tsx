@@ -178,9 +178,20 @@ export const Nfts: FC = () => {
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
 
+            const latestBlockHash2 = await program.provider.connection.getLatestBlockhash();
+            const confirmation2 = await program.provider.connection.confirmTransaction({
+                blockhash: latestBlockHash2.blockhash,
+                lastValidBlockHeight: latestBlockHash2.lastValidBlockHeight,
+                signature: sx3
+            });
+
             const vipAccount = await prog_x.account.vip.fetch(vipPda);
 
             setVipAccountData(vipAccount);
+
+            notify({ message: "NFT Recorded on chain!", type: "success" });
+
+
         } else {
             notify({ message: "Goodfellas only, scram!", type: "error" });
             return;
