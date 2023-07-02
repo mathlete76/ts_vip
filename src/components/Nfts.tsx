@@ -9,8 +9,11 @@ import jdl from "./nft_minter.json";
 import {
     PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID
 } from '@metaplex-foundation/mpl-token-metadata';
-
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
+
 
 const jdl_string = JSON.stringify(jdl);
 const jdl_object = JSON.parse(jdl_string);
@@ -177,26 +180,50 @@ export const Nfts: FC = () => {
 
             setVipAccountData(vipAccount);
         } else {
-            notify({ message: "Invalid Request!", type: "error" });
+            notify({ message: "Goodfellas only, scram!", type: "error" });
             return;
         }
 
     };
 
+    const settings = {
+        dots: true,
+        infinite: false,
+        speed: 500,
+        slidesToShow: 5,
+        slidesToScroll: 5,
+        initialSlide: 0,
+        responsive: [
+            {
+              breakpoint: 1024,
+              settings: {
+                slidesToShow: 3,
+                slidesToScroll: 3,
+                infinite: true,
+                dots: true
+              }
+            },
+            {
+              breakpoint: 600,
+              settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+                initialSlide: 2
+              }
+            },
+            {
+              breakpoint: 480,
+              settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1
+              }
+            }
+          ]
+    };
+
     return (
         <div>
-            {/* <div className="relative group items-center">
-                <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
-                                                rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
-                <button
-                    className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                    onClick={mintNFT}
-                >
-                    <span>Create Goodfella</span>
-                </button>
-
-            </div> */}
-            <div>
+            <div> 
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500
                                                 rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
@@ -208,6 +235,8 @@ export const Nfts: FC = () => {
                     </button>
                     </div>
             <div className="grid grid-cols-5 gap-4">
+                <div>
+            <Slider {...settings}>
                 {nfts && nfts
                     .filter(nft => nft.name !== 'Goodfellas Collection')
                     .map((nft, index) => (
@@ -227,6 +256,8 @@ export const Nfts: FC = () => {
                             </div>
                         </div>
                     ))}
+            </Slider>
+        </div>
                 {isModalOpen && (
                 <div
                     style={{
