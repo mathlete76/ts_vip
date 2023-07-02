@@ -1,12 +1,10 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Keypair } from '@solana/web3.js';
 import { FC, useCallback, useEffect, useState } from 'react';
-import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import { createAssociatedTokenAccount, TOKEN_PROGRAM_ID, } from '@solana/spl-token';
 import jdl from "./nft_minter.json";
 import {
     PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID
@@ -40,6 +38,7 @@ export const Nfts: FC = () => {
     const [currentImage, setCurrentImage] = useState(null);
     const [nfts, setNfts] = useState(null);
     const [rawNfts, setRawNfts] = useState(null);
+    const [vipAccountData, setVipAccountData] = useState(null);
 
     const getNFTs = async () => {
 
@@ -86,7 +85,12 @@ export const Nfts: FC = () => {
 
       const vipAccount = await prog_x.account.vip.fetch(vipPda);
 
+      setVipAccountData(vipAccount);
 
+      if (vipAccountData.nft) {
+            notify({ message: "NFT Already Minted!", type: "error" });
+            return;
+        } else if (vipAccountData.votes === 5 && vipAccountData.nft === null && vipAccountData.verified === true && vipAccountData.member === true) {
 
         const metadataAddress = (PublicKey.findProgramAddressSync(
             [
@@ -111,7 +115,7 @@ export const Nfts: FC = () => {
         }).signers([mintKeyPair]).rpc();
 
         console.log("NFT Ready!");
-        console.log(`   Mint Address: ${ourWallet.publicKey}`);
+        console.log(`   Mint Address: ${mintKeyPair.publicKey}`);
         console.log(`   Tx Signature: ${sx}`);
 
         notify({ message: "NFT Ready to Mint!", type: "success" });
@@ -153,19 +157,31 @@ export const Nfts: FC = () => {
           console.log(`   Tx Signature: ${sx2}`);
 
           notify({ message: "NFT Minted!", type: "success" });
+
+          const latestBlockHash = await program.provider.connection.getLatestBlockhash();
+          const confirmation = await program.provider.connection.confirmTransaction({
+              blockhash: latestBlockHash.blockhash,
+              lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+              signature: sx2
+          });
+
           
-
-
-            const sx3 = await prog_x.methods.setNft().accounts({
+          
+            const sx3 = await prog_x.methods.setNft(mintKeyPair.publicKey).accounts({
                 vipAccount: vipPda,
                 payer: provider.wallet.publicKey,
                 systemProgram: web3.SystemProgram.programId,
             }).rpc();
 
-            console.log("Success!");
+            const vipAccount = await prog_x.account.vip.fetch(vipPda);
+
+            setVipAccountData(vipAccount);
+        } else {
+            notify({ message: "Invalid Request!", type: "error" });
+            return;
+        }
+
     };
-
-
 
     return (
         <div>
