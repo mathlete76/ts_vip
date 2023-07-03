@@ -1,16 +1,12 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { PublicKey, Keypair } from '@solana/web3.js';
+import { PublicKey  } from '@solana/web3.js';
 import { FC, useCallback, useEffect, useState } from 'react';
-import useUserSOLBalanceStore from '../stores/useUserSOLBalanceStore';
 import idl from "./ts_sol.json";
-import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
+import { Program, AnchorProvider, web3, utils } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
-
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
-
 const init_string = "gf_a";
-
 const programID = new PublicKey(idl.metadata.address);
 
 export const Voting: FC = () => {
@@ -37,11 +33,15 @@ export const Voting: FC = () => {
                         new PublicKey(member).toBuffer(),
                     ], program.programId
                     );
-                    const vipAccount = await program.account.vip.fetch(vipPda);
-                    return vipAccount;
+                    const vipAccount = await program.account.vip.fetch(vipPda) as any;
+                    // check if the member field of the VIP account is false
+                    if (!vipAccount.member) {
+                        return vipAccount;
+                    }
                 })
             );
-            setVipAccounts(accounts);
+            // filter out undefined values (VIP accounts that have member field set to true)
+            setVipAccounts(accounts.filter(account => account !== undefined));
         }
     }, [memberAccountData]);
 
@@ -166,7 +166,7 @@ export const Voting: FC = () => {
                     </div>
                 ))
             ) : (
-                <p>No members</p>
+                <p>No Potential Gangsters</p>
             )}
         </div>
     );
