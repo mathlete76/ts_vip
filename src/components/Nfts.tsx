@@ -1,6 +1,5 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
-import idl from "./ts_sol.json";
 import { notify } from 'utils/notifications';
 import { mintV2, mplCandyMachine, fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
@@ -8,13 +7,9 @@ import { transactionBuilder, generateSigner, publicKey, some } from "@metaplex-f
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
 
-const idl_string = JSON.stringify(idl);
-const idl_object = JSON.parse(idl_string);
-
 export const Nfts: FC = () => {
     
     const wallet = useWallet();
-
     const mintNFT = async () => {
 
         notify({ message: 'Minting NFT', description: 'Please wait...' });
@@ -24,17 +19,8 @@ export const Nfts: FC = () => {
             .use(mplCandyMachine());
 
         const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
-
         const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
-
-        console.log("Candy Machine: ", candyMachine)
-
         const nftMint = generateSigner(umi);
-
-        console.log("NFT Mint: ", nftMint.publicKey)
-
-        console.log("Candy Machine Collection Mint: ", candyMachine.collectionMint)
-        console.log("Candy Machine Authority: ", candyMachine.authority)
 
         await transactionBuilder()
             .add(setComputeUnitLimit(umi, { units: 800_000 }))
@@ -44,9 +30,6 @@ export const Nfts: FC = () => {
                     nftMint,
                     collectionMint: candyMachine.collectionMint,
                     collectionUpdateAuthority: candyMachine.authority,
-                    mintArgs: {
-                        mintLimit: some({ id: 1 }),
-                    },
                 })
             )
             .sendAndConfirm(umi);
