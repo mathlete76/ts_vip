@@ -36,7 +36,7 @@ export const Nfts: FC = () => {
                     candyMachine: candyMachine.publicKey,
                     nftMint: nftMint,
                     collectionMint: candyMachine.collectionMint,
-                    collectionUpdateAuthority: publicKey("4wJMaWHooEgmv1sXtzn2Jfn49n4dre2eZ7nMdJCUP9PJ"),
+                    collectionUpdateAuthority: candyMachine.authority,
                     mintArgs: {
                         mintLimit: some({ id: 1 }),
                     },
