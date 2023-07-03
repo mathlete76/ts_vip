@@ -34,12 +34,12 @@ export const Nfts: FC = () => {
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
-                    nftMint: nftMint.publicKey,
                     collectionMint: candyMachine.collectionMint,
                     collectionUpdateAuthority: candyMachine.authority,
                     mintArgs: {
                         mintLimit: some({ id: 1 }),
-                      },
+                    },
+                    nftMint: nftMint
                 })
             )
             .sendAndConfirm(umi);
