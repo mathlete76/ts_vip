@@ -1,5 +1,5 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { notify } from 'utils/notifications';
 import { mintV2, mplCandyMachine, fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
@@ -32,6 +32,25 @@ export const Nfts: FC = () => {
     };
 
     const [vipAccountData, setVipAccountData] = useState(null);
+
+    useEffect(() => {
+        if (wallet?.publicKey && !vipAccountData) {
+            const provider = getProvider();
+            const program = new Program(idl_object, programID, provider);
+
+            const fetchVipAccount = async () => {
+                const [vipPda] = await pk.findProgramAddressSync([
+                    utils.bytes.utf8.encode(init_string),
+                    wallet.publicKey.toBuffer(),
+                ], program.programId
+                );
+                const vipAccount = await program.account.vip.fetch(vipPda);
+                setVipAccountData(vipAccount);
+            };
+
+            fetchVipAccount();
+        }
+    }, [wallet, vipAccountData]);
 
     const mintNFT = async () => {
 
