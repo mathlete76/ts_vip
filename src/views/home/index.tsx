@@ -31,7 +31,7 @@ export const HomeView: FC = ({ }) => {
 
     <div className="md:hero mx-auto p-4">
       <div className="md:hero-content flex flex-col">
-        <img className="mx-auto" src="/public/gfbm.png" alt="logo" />
+        <img className="mx-auto" src="/gfbm.png" alt="logo" />
         <div className="flex flex-col mt-2">
           <Landing />
         </div>
