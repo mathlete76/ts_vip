@@ -20,8 +20,7 @@ export const Nfts: FC = () => {
         notify({ message: 'Minting NFT', description: 'Please wait...' });
 
         const umi = createUmi("https://api.devnet.solana.com")
-            .use(walletAdapterIdentity(wallet))
-            .use(mplCandyMachine());
+            .use(walletAdapterIdentity(wallet));
 
         const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
 
@@ -34,7 +33,7 @@ export const Nfts: FC = () => {
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
-                    nftMint: nftMint.publicKey,
+                    nftMint: nftMint,
                     collectionMint: candyMachine.collectionMint,
                     collectionUpdateAuthority: candyMachine.authority,
                     mintArgs: {
