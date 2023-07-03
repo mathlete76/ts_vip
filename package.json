@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.28.1-beta.1",
-    "@heroicons/react": "^1.0.5",
+    "@heroicons/react": "^2.0.18",
     "@metaplex-foundation/js": "^0.19.4",
     "@metaplex-foundation/mpl-candy-machine": "^6.0.0-alpha.16",
     "@metaplex-foundation/mpl-toolbox": "^0.8.0",
