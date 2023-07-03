@@ -1,5 +1,5 @@
-import { useConnection, useWallet } from '@solana/wallet-adapter-react';
-import { FC, useState } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { FC } from 'react';
 import idl from "./ts_sol.json";
 import { notify } from 'utils/notifications';
 import { mintV2, mplCandyMachine, fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
@@ -13,21 +13,14 @@ const idl_object = JSON.parse(idl_string);
 
 export const Nfts: FC = () => {
     
-    const ourWallet = useWallet();
-    
+    const wallet = useWallet();
+
     const mintNFT = async () => {
 
-        if (ourWallet?.publicKey) {
+        notify({ message: 'Minting NFT', description: 'Please wait...' });
 
-            notify({ message: "Will be minting Goodfella...", type: "info" });
-        } else {
-            notify({ message: "Goodfellas only, scram!", type: "error" });
-            return;
-        }
-
-        const rpc = ""
         const umi = createUmi("https://api.devnet.solana.com")
-            .use(walletAdapterIdentity(ourWallet))
+            .use(walletAdapterIdentity(wallet))
             .use(mplCandyMachine());
 
         const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
@@ -41,7 +34,7 @@ export const Nfts: FC = () => {
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
-                    nftMint,
+                    nftMint: nftMint.publicKey,
                     collectionMint: candyMachine.collectionMint,
                     collectionUpdateAuthority: candyMachine.authority,
                     mintArgs: {
@@ -50,7 +43,6 @@ export const Nfts: FC = () => {
                 })
             )
             .sendAndConfirm(umi);
-
     };
 
     return (
