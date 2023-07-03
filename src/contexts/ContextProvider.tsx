@@ -17,9 +17,12 @@ const ReactUIWalletModalProviderDynamic = dynamic(
 );
 
 const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
+    
+    const mainPrefix = "https://mainnet.helius-rpc.xyz/?api-key=";
+    const rpc = mainPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY;
     const { autoConnect } = useAutoConnect();
     const { networkConfiguration } = useNetworkConfiguration();
-    const network = networkConfiguration as WalletAdapterNetwork;
+    const network = rpc as WalletAdapterNetwork;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
     console.log(network);
