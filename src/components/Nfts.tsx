@@ -1,7 +1,7 @@
 import { useWallet } from '@solana/wallet-adapter-react';
 import { FC } from 'react';
 import { notify } from 'utils/notifications';
-import { mintV2, mplCandyMachine, fetchCandyMachine, fetchCandyGuard } from "@metaplex-foundation/mpl-candy-machine";
+import { mintV2, mplCandyMachine, fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
 import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 import { transactionBuilder, generateSigner, publicKey, some } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
@@ -20,7 +20,6 @@ export const Nfts: FC = () => {
 
         const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
         const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
-        const candyGuard = await fetchCandyGuard(umi, candyMachine.mintAuthority);
         const nftMint = generateSigner(umi);
 
         await transactionBuilder()
@@ -30,7 +29,8 @@ export const Nfts: FC = () => {
                     candyMachine: candyMachine.publicKey,
                     nftMint,
                     collectionMint: candyMachine.collectionMint,
-                    collectionUpdateAuthority: candyGuard.publicKey,
+                    collectionUpdateAuthority: candyMachine.authority,
+                    candyGuard: candyMachine.mintAuthority,
                     mintArgs: {
                         mintLimit: some({ id: 1 }),
                     },
