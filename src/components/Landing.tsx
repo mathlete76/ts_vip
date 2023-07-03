@@ -63,6 +63,8 @@ export const Landing: FC = () => {
     const [vipAccountAddy, setVipAccountAddy] = useState(null);
     const [isKYCd, setKYCstatus] = useState(null);
     const [passedKYC, setPassedKYC] = useState(null);
+    const [isAdmin, setAdmin] = useState(null);
+
 
     const checkVIPAccount = async () => {
         if (!ourWallet?.publicKey) {
@@ -95,6 +97,16 @@ export const Landing: FC = () => {
                 setKYCstatus(false);
             }
 
+            if (ourWallet.publicKey.toBase58() == "87NmtJLRUxwKZf72QHoz8HgFVjPQrabUmCKeKHMAPWo2") {
+                setAdmin(true);
+            } else {
+                setAdmin(false);
+            }
+
+            if (vipAccountData && vipAccountData.verified) {
+                setPassedKYC(true);
+            }
+
 
         } catch (error) {
             // If the fetch method throws an error, the account does not exist
@@ -102,6 +114,7 @@ export const Landing: FC = () => {
             setHasVIPAccount(false);
         }
     };
+
 
     const checkShuftiStatus = async () => {
         if (!ourWallet?.publicKey) {
@@ -281,9 +294,9 @@ export const Landing: FC = () => {
         }
 
         let payload = {
-            reference: `GF_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
+            reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
             journey_id: "shMlbzzM1687780796",
-            callback_url: "https://goodfellas.vercel.app/",
+            callback_url: "https://ts-vip.vercel.app/",
         }
 
         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
@@ -362,6 +375,7 @@ export const Landing: FC = () => {
                     <p>Account: {vipAccountAddy.toBase58()}</p>
                     <p>KYC Ref: {vipAccountData.reference}</p>
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
+                    <p>Votes: {vipAccountData.votes}</p>
                     <p>Goodfella: {vipAccountData.member ? "Yes" : "No"}</p>
                     {!passedKYC ? (
                         <div>
@@ -373,7 +387,7 @@ export const Landing: FC = () => {
                                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                                         onClick={checkShuftiStatus}
                                     >
-                                        <span>Register KYC On Chain</span>
+                                        <span>KYC to chain</span>
                                     </button>
 
                                 </div>
@@ -386,7 +400,7 @@ export const Landing: FC = () => {
                                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                                         onClick={startKYC}
                                     >
-                                        <span>Complete KYC</span>
+                                        <span>KYC</span>
                                     </button>
                                 </div>
                             )}
@@ -411,7 +425,7 @@ export const Landing: FC = () => {
                         className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
                         onClick={createVIPAccount}
                     >
-                        <span>Join Goodfellas</span>
+                        <span>Create Account</span>
                     </button>
                 </div>
                 </div>

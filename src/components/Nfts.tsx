@@ -8,7 +8,9 @@ import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
 import { PublicKey as pk } from '@solana/web3.js';
 import idl from "./ts_sol.json";
-import { Program, AnchorProvider, utils } from "@coral-xyz/anchor"
+import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
+import { set } from 'date-fns';
+
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
@@ -17,8 +19,8 @@ const init_string = "gf_a";
 
 const mainPrefix = "https://mainnet.helius-rpc.xyz/?api-key=";
 const devPrefix = "https://rpc-devnet.helius.xyz/?api-key=";
-//const rpc = devPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY; // use on devnet
-const rpc = mainPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY; // use on mainnet
+const rpc = devPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY; // use on devnet
+// const rpc = mainPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY; // use on mainnet
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
@@ -78,7 +80,7 @@ export const Nfts: FC = () => {
                 .use(walletAdapterIdentity(wallet))
                 .use(mplCandyMachine());
 
-            const candyMachinePublicKey = publicKey(process.env.NEXT_PUBLIC_CANDYMACHINE);
+            const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
             const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
             const nftMint = generateSigner(umi);
 
