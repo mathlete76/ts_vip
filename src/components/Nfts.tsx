@@ -86,16 +86,15 @@ export const Nfts: FC = () => {
         const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
 
         const nftMint = generateSigner(umi);
-        const nftOwner = generateSigner(umi).publicKey;
 
-        const tx = await transactionBuilder()
+        await transactionBuilder()
             .add(setComputeUnitLimit(umi, { units: 800_000 }))
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
                     nftMint,
                     collectionMint: candyMachine.collectionMint,
-                    collectionUpdateAuthority: candyMachine.mintAuthority,
+                    collectionUpdateAuthority: candyMachine.authority,
                     mintArgs: {
                         mintLimit: some({ id: 1 }),
                       },
