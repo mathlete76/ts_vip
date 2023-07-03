@@ -1,30 +1,29 @@
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { PublicKey, Keypair } from '@solana/web3.js';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import idl from "./ts_sol.json";
 import { Program, AnchorProvider, web3, utils, BN } from "@coral-xyz/anchor"
 import { notify } from 'utils/notifications';
-import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
-import jdl from "./nft_minter.json";
+import { mintV2, mplCandyMachine, fetchCandyMachine, fetchCandyGuard } from "@metaplex-foundation/mpl-candy-machine";
+import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
+import { transactionBuilder, generateSigner, publicKey, some } from "@metaplex-foundation/umi";
+import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
+import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
+
+
 import {
     PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID
 } from '@metaplex-foundation/mpl-token-metadata';
 
 import { ASSOCIATED_PROGRAM_ID } from '@coral-xyz/anchor/dist/cjs/utils/token';
-import { min } from 'date-fns';
 
-const jdl_string = JSON.stringify(jdl);
-const jdl_object = JSON.parse(jdl_string);
-const minterID = new PublicKey(jdl.metadata.address);
+
 
 const idl_string = JSON.stringify(idl);
 const idl_object = JSON.parse(idl_string);
 const programID = new PublicKey(idl.metadata.address);
 const init_string = "gf_a";
 
-const creator = new PublicKey("DJMnZqNMtcydi2Sedu63VRkzDvFQtmMJgRgefPJu49Gt")
-
-const mintKeyPair = web3.Keypair.generate();
 
 export const Nfts: FC = () => {
     const { connection } = useConnection();
@@ -76,6 +75,33 @@ export const Nfts: FC = () => {
             notify({ message: "Goodfellas only, scram!", type: "error" });
             return;
         }
+
+        const rpc = ""
+        const umi = createUmi("https://api.devnet.solana.com")
+            .use(walletAdapterIdentity(ourWallet))
+            .use(mplCandyMachine());
+
+        const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
+
+        const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
+
+        const nftMint = generateSigner(umi);
+        const nftOwner = generateSigner(umi).publicKey;
+
+        const tx = await transactionBuilder()
+            .add(setComputeUnitLimit(umi, { units: 800_000 }))
+            .add(
+                mintV2(umi, {
+                    candyMachine: candyMachine.publicKey,
+                    nftMint,
+                    collectionMint: candyMachine.collectionMint,
+                    collectionUpdateAuthority: candyMachine.mintAuthority,
+                    mintArgs: {
+                        mintLimit: some({ id: 1 }),
+                      },
+                })
+            )
+            .sendAndConfirm(umi);
 
     };
 
