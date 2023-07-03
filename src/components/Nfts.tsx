@@ -96,7 +96,7 @@ export const Nfts: FC = () => {
 
     return (
         <div>
-            {vipAccountData && vipAccountData.verified === true && vipAccountData.member === true && !vipAccountData.nft ? (
+            {vipAccountData && vipAccountData.verified === true && vipAccountData.member === true  ? (
                 <div className="relative group items-center">
                     <div className="m-1 absolute -inset-0.5 bg-gradient-to-r from-indigo-500 to-fuchsia-500 
                                                 rounded-lg blur opacity-20 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-tilt"></div>

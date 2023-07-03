@@ -16,7 +16,6 @@ const programID = new PublicKey(idl.metadata.address);
 export const Voting: FC = () => {
     const { connection } = useConnection();
     const ourWallet = useWallet();
-    const { getUserSOLBalance } = useUserSOLBalanceStore();
 
     const getProvider = () => {
         const provider = new AnchorProvider(connection, ourWallet, AnchorProvider.defaultOptions());
