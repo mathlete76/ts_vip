@@ -3,7 +3,7 @@ import { FC } from 'react';
 import idl from "./ts_sol.json";
 import { notify } from 'utils/notifications';
 import { mintV2, mplCandyMachine, fetchCandyMachine } from "@metaplex-foundation/mpl-candy-machine";
-import { setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
+import { createMintWithAssociatedToken, setComputeUnitLimit } from "@metaplex-foundation/mpl-toolbox";
 import { transactionBuilder, generateSigner, publicKey, some } from "@metaplex-foundation/umi";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import { walletAdapterIdentity } from '@metaplex-foundation/umi-signer-wallet-adapters';
@@ -28,9 +28,11 @@ export const Nfts: FC = () => {
         const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
 
         const nftMint = generateSigner(umi);
+        const nftOwner = generateSigner(umi).publicKey;
 
         await transactionBuilder()
             .add(setComputeUnitLimit(umi, { units: 800_000 }))
+            .add(createMintWithAssociatedToken(umi, { mint: nftMint, owner: nftOwner }))
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
@@ -39,7 +41,7 @@ export const Nfts: FC = () => {
                     mintArgs: {
                         mintLimit: some({ id: 1 }),
                     },
-                    nftMint: nftMint
+                    nftMint: nftMint.publicKey
                 })
             )
             .sendAndConfirm(umi);
