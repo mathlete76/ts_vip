@@ -19,7 +19,7 @@
     "@metaplex-foundation/umi": "^0.8.4",
     "@metaplex-foundation/umi-bundle-defaults": "^0.8.4",
     "@metaplex-foundation/umi-signer-wallet-adapters": "^0.8.4",
-    "@noble/ed25519": "^1.7.1",
+    "@noble/ed25519": "^2.0.0",
     "@planetscale/database": "^1.7.0",
     "@solana/spl-token": "^0.3.8",
     "@solana/wallet-adapter-base": "^0.9.22",
