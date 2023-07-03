@@ -375,7 +375,6 @@ export const Landing: FC = () => {
                     <p>Account: {vipAccountAddy.toBase58()}</p>
                     <p>KYC Ref: {vipAccountData.reference}</p>
                     <p>Verified: {vipAccountData.verified ? "Yes" : "No"}</p>
-                    <p>Votes: {vipAccountData.votes}</p>
                     <p>Goodfella: {vipAccountData.member ? "Yes" : "No"}</p>
                     {!passedKYC ? (
                         <div>
