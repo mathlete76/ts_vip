@@ -23,13 +23,16 @@ export const Nfts: FC = () => {
         const nftMint = generateSigner(umi);
 
         await transactionBuilder()
-            .add(setComputeUnitLimit(umi, { units: 800_000 }))
+            .add(setComputeUnitLimit(umi, { units: 1_000_000 }))
             .add(
                 mintV2(umi, {
                     candyMachine: candyMachine.publicKey,
                     nftMint,
                     collectionMint: candyMachine.collectionMint,
                     collectionUpdateAuthority: candyMachine.authority,
+                    mintArgs: {
+                        mintLimit: some({ id: 1 }),
+                    },
                 })
             )
             .sendAndConfirm(umi);
