@@ -95,7 +95,7 @@ export const Nfts: FC = () => {
                             collectionUpdateAuthority: candyMachine.authority,
                             candyGuard: candyMachine.mintAuthority,
                             mintArgs: {
-                                mintLimit: some({ id: 1 }),
+                                mintLimit: some({ id: 2 }),
                             },
                         })
                     )
