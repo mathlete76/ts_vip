@@ -32,18 +32,28 @@ export const Voting: FC = () => {
             const program = new Program(idl_object, programID, provider);
             const accounts = await Promise.all(
                 memberAccountData.members.map(async (member) => {
-                    const [vipPda] = await PublicKey.findProgramAddressSync([
-                        utils.bytes.utf8.encode(init_string),
-                        new PublicKey(member).toBuffer(),
-                    ], program.programId
-                    );
-                    const vipAccount = await program.account.vip.fetch(vipPda);
-                    return vipAccount;
+                    try {
+                        const [vipPda] = await PublicKey.findProgramAddressSync([
+                            utils.bytes.utf8.encode(init_string),
+                            new PublicKey(member).toBuffer(),
+                        ], program.programId
+                        );
+                        const vipAccount = await program.account.vip.fetch(vipPda) as any;
+                        // Check if the member field of the VIP account is false
+                        if (!vipAccount.member) {
+                            return vipAccount;
+                        }
+                    } catch (error) {
+                        console.error(`Failed to fetch VIP account for member ${member}: ${error}`);
+                    }
+                    return null;
                 })
             );
-            setVipAccounts(accounts);
+            // Filter out null values (VIP accounts that could not be fetched or have member field set to true)
+            setVipAccounts(accounts.filter(account => account !== null));
         }
     }, [memberAccountData]);
+    
 
     useEffect(() => {
         if (retrieved) {
