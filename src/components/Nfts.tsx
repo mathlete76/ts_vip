@@ -80,7 +80,7 @@ export const Nfts: FC = () => {
                 .use(walletAdapterIdentity(wallet))
                 .use(mplCandyMachine());
 
-            const candyMachinePublicKey = publicKey("CPSNzvpnYhPrPtaHAZSaCLWojD2CqPR6JQjH8M8d2mF6");
+            const candyMachinePublicKey = publicKey(process.env.NEXT_PUBLIC_CANDYMACHINE);
             const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
             const nftMint = generateSigner(umi);
 
@@ -95,7 +95,7 @@ export const Nfts: FC = () => {
                             collectionUpdateAuthority: candyMachine.authority,
                             candyGuard: candyMachine.mintAuthority,
                             mintArgs: {
-                                mintLimit: some({ id: 2 }),
+                                mintLimit: some({ id: Number(process.env.NEXT_PUBLIC_MINTARGS) }),
                             },
                         })
                     )
