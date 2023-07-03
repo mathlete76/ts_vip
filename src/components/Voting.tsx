@@ -66,6 +66,8 @@ export const Voting: FC = () => {
             ], program.programId
             );
 
+            console.log("Members PDA: ", membersPda.toBase58());
+
             const membersAccount = await program.account.members.fetch(membersPda);
 
             if (membersAccount) {
