@@ -30,7 +30,7 @@ export const Voting: FC = () => {
         if (memberAccountData) {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
-            const accounts = await Promise.all(
+            const accounts = await Promise.allSettled(
                 memberAccountData.members.map(async (member) => {
                     try {
                         const [vipPda] = await PublicKey.findProgramAddressSync([
@@ -51,9 +51,11 @@ export const Voting: FC = () => {
                 })
             );
             // Filter out null values (VIP accounts that could not be fetched or have member field set to true)
-            setVipAccounts(accounts.filter(account => account !== null));
+            setVipAccounts(accounts.filter(result => result.status === 'fulfilled').map(result => (result as PromiseFulfilledResult<any>).value));
+
         }
     }, [memberAccountData]);
+    
     
 
     useEffect(() => {
