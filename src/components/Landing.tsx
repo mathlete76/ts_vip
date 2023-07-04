@@ -294,9 +294,9 @@ export const Landing: FC = () => {
         }
 
         let payload = {
-            reference: `TS_VIP_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
+            reference: `GF_BM_${ourWallet.publicKey.toBase58()}_${Math.random()}`,
             journey_id: "shMlbzzM1687780796",
-            callback_url: "https://ts-vip.vercel.app/",
+            callback_url: "https://goodfellas.vercel.app/",
         }
 
         const btoa_string = process.env.NEXT_PUBLIC_SP_API_KEY + ":" + process.env.NEXT_PUBLIC_SP_API_SECRET;
