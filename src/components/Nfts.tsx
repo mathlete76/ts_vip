@@ -74,9 +74,11 @@ export const Nfts: FC = () => {
 
         console.log("VIP Account: ", vipAccount);
 
+        notify({ message: 'Checking Membership' });
+
         if (vipAccount.verified === true && vipAccount.member === true) {
 
-            notify({ message: 'Minting NFT', description: 'Please wait...' });
+            notify({ message: 'Building Mint transaction', description: 'Please wait...' });
 
             const umi = createUmi(rpc)
                 .use(walletAdapterIdentity(wallet))
@@ -87,13 +89,16 @@ export const Nfts: FC = () => {
             const candyMachinePublicKey = publicKey(process.env.NEXT_PUBLIC_CANDYMACHINE);
 
             console.log("Candy Machine Public Key: ", candyMachinePublicKey)
+            notify({ message: 'Fetching Candy Machine' });
             
             const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
             console.log("Candy Machine: ", candyMachine)
+            notify({ message: 'Candy machine approved' });
 
             const nftMint = generateSigner(umi);
 
             console.log("NFT Mint: ", nftMint)
+            notify({ message: 'Generating NFT Mint' });
 
             try {
                 const mint = await transactionBuilder()
