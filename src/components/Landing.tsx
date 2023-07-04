@@ -172,7 +172,6 @@ export const Landing: FC = () => {
             console.log("KYC ACCEPTED");
     
             setKYCstatus(true);
-    
             setPassedKYC(true);
     
             if (!confirmation.value.err) {
