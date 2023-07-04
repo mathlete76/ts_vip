@@ -76,7 +76,7 @@ export const Voting: FC = () => {
             const provider = getProvider();
             const program = new Program(idl_object, programID, provider);
             const [membersPda] = await PublicKey.findProgramAddressSync([
-                utils.bytes.utf8.encode("members_b"),
+                utils.bytes.utf8.encode("members_c"),
             ], program.programId
             );
 
