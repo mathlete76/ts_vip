@@ -82,9 +82,18 @@ export const Nfts: FC = () => {
                 .use(walletAdapterIdentity(wallet))
                 .use(mplCandyMachine());
 
+            console.log("UMI: ", umi)
+
             const candyMachinePublicKey = publicKey(process.env.NEXT_PUBLIC_CANDYMACHINE);
+
+            console.log("Candy Machine Public Key: ", candyMachinePublicKey)
+            
             const candyMachine = await fetchCandyMachine(umi, candyMachinePublicKey);
+            console.log("Candy Machine: ", candyMachine)
+
             const nftMint = generateSigner(umi);
+
+            console.log("NFT Mint: ", nftMint)
 
             try {
                 const mint = await transactionBuilder()
