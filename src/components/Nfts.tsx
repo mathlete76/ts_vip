@@ -72,6 +72,8 @@ export const Nfts: FC = () => {
 
         setVipAccountData(vipAccount);
 
+        console.log("VIP Account: ", vipAccount);
+
         if (vipAccount.verified === true && vipAccount.member === true) {
 
             notify({ message: 'Minting NFT', description: 'Please wait...' });
