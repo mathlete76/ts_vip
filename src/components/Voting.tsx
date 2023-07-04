@@ -41,6 +41,7 @@ export const Voting: FC = () => {
                         const vipAccount = await program.account.vip.fetch(vipPda) as any;
                         // Check if the member field of the VIP account is false
                         if (!vipAccount.member) {
+                            console.log(`Fetched VIP account for member ${member}:`, vipAccount.username)
                             return vipAccount;
                         }
                     } catch (error) {
