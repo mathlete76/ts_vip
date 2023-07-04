@@ -178,7 +178,7 @@ export const Landing: FC = () => {
             if (!confirmation.value.err) {
                 try {
                     const [membersPDA] = await PublicKey.findProgramAddressSync([
-                        utils.bytes.utf8.encode("members_b"),
+                        utils.bytes.utf8.encode("members_c"),
                     ], program.programId
                     );
     
