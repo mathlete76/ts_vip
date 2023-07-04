@@ -178,7 +178,7 @@ export const Voting: FC = () => {
                     </div>
                 ))
             ) : (
-                <p>No members</p>
+                <p>No Prospective Goodfellas</p>
             )}
         </div>
     );
