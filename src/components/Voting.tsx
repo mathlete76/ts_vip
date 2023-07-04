@@ -155,25 +155,24 @@ export const Voting: FC = () => {
         }
     };
 
-
     return (
-        <div className="flex flex-col justify-center">
+        <div className="grid grid-cols-5 gap-4 justify-center">
             {vipAccounts.length > 0 ? (
                 vipAccounts.map((vipAccount, index) => (
                     <div key={index} className="relative group">
                         <div className="max-w-md mx-auto mockup-code bg-primary border-2 border-[#5252529f] p-6 px-10 my-2">
-                        <pre data-prefix=">">
+                            <pre data-prefix=">">
                                 <code className="truncate">{vipAccount.username}</code>
                             </pre>
                             <pre data-prefix=">">
-                            <code className="truncate">Votes: {vipAccount.votes}</code>
+                                <code className="truncate">Votes: {vipAccount.votes}</code>
                             </pre>
                             <button
-                                        className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
-                                       onClick={() => castVote(vipAccount.user)}
-                                    >
-                                        <span>Vote</span>
-                                    </button>
+                                className="px-8 m-2 btn animate-pulse bg-gradient-to-br from-indigo-500 to-fuchsia-500 hover:from-white hover:to-purple-300 text-black"
+                                onClick={() => castVote(vipAccount.user)}
+                            >
+                                <span>Vote</span>
+                            </button>
                         </div>
                     </div>
                 ))
@@ -182,4 +181,5 @@ export const Voting: FC = () => {
             )}
         </div>
     );
-};
+
+}
