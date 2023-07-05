@@ -1,6 +1,6 @@
 import { WalletAdapterNetwork, WalletError } from '@solana/wallet-adapter-base';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { PhantomWalletAdapter, BackpackWalletAdapter, SolflareWalletAdapter} from '@solana/wallet-adapter-wallets';
+import { PhantomWalletAdapter, BackpackWalletAdapter, SolflareWalletAdapter } from '@solana/wallet-adapter-wallets';
 import {
     UnsafeBurnerWalletAdapter
 } from '@solana/wallet-adapter-wallets';
