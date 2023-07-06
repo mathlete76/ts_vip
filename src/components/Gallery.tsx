@@ -22,7 +22,7 @@ const devPrefix = "https://rpc-devnet.helius.xyz/?api-key=";
 // const rpc = devPrefix + process.env.NEXT_PUBLIC_HEL_API_KEY; // use on devnet
 const rpc = process.env.NEXT_PUBLIC_RPC_HOST; // use on mainnet
 
-export const Nfts: FC = () => {
+export const Gallery: FC = () => {
     const { connection } = useConnection();
     const wallet = useWallet();
 

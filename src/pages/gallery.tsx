@@ -1,9 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { NftsView } from "views/nfts";
+import { GalleryView } from "views/gallery";
 
 
-const Nfts: NextPage = (props) => {
+const Gallery: NextPage = (props) => {
   return (
     <div>
       <Head>
@@ -13,9 +13,9 @@ const Nfts: NextPage = (props) => {
           content="Registration, Voting and NFTs"
         />
       </Head>
-      <NftsView />
+      <GalleryView />
     </div>
   );
 };
 
-export default Nfts;
+export default Gallery;
