@@ -275,6 +275,32 @@
           "type": "publicKey"
         }
       ]
+    },
+    {
+      "name": "resizeMemberlist",
+      "accounts": [
+        {
+          "name": "members",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "founders",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
     }
   ],
   "accounts": [
